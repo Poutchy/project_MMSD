@@ -1,0 +1,13 @@
+Estrazione file prodotti escludendo campi
+campi finali prima di contributor
+submitter*
+singolo file*
+u-gov*
+contributor*
+
+
+
+Metadati più validati
+Posizione corrente alla data odierna
+anni 2020 in poi compreso 9999
+
