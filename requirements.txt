@@ -4,3 +4,5 @@ Pygments==2.18.0
 rich==13.9.4
 simpy==4.1.1
 typing_extensions==4.12.2
+pandas==2.2.3
+openpyxl==3.1.5
