@@ -1,6 +1,6 @@
 from typing import Dict
 
-from lib.paper import Paper
+from libraries.paper import Paper
 
 
 class Person:

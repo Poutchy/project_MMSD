@@ -6,7 +6,7 @@ Created on Sun Dec 29 14:14:32 2024
 @author: druetto
 """
 
-from lib.importExcel import createTableLecturers, createTableProducts
+from libraries.importExcel import createTableLecturers, createTableProducts
 
 Configs = "data/config.json"
 AffFile = "data/2024-02-12-DipInfoAfferenze-PO-PA-RIC-orig.xlsx"

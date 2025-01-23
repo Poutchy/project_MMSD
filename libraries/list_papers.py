@@ -1,4 +1,4 @@
-from lib.paper import Paper
+from libraries.paper import Paper
 
 
 class PaperCollection:
