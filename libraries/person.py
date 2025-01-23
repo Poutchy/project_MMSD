@@ -1,6 +1,7 @@
-from typing import Dict
+from random import shuffle
 
 from libraries.paper import Paper
+from libraries.list_papers import PaperCollection
 
 
 class Person:
@@ -12,9 +13,9 @@ class Person:
         self.name: str = name
         self.surname: str = surname
         self.matricule: str = matricule
-        self.papers: Dict[str, Paper] = {}
+        self.papers: PaperCollection = PaperCollection()
         self.proposed_papers: int = 0
 
-    def add_paper(self, paper_id: str, paper: Paper):
-        self.papers[paper_id] = paper
+    def add_paper(self, paper: Paper):
+        self.papers.add_paper(paper)
         self.proposed_papers += 1

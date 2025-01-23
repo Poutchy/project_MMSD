@@ -3,3 +3,4 @@ class Paper:
         self.id: int = id
         self.name: str = name
         self.value: int = value
+        self.status: int = 0 
