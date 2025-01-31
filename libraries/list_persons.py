@@ -28,8 +28,14 @@ class PersonCollection:
         self.persons.append(person)
         self.id_map[str(person.id)] = person
 
-    def get_by_id(self, person_id: int):
+    def get_by_id(self, person_id: int) -> Person:
         return self.id_map.get(str(person_id), None)
+    
+    def remove_person(self, person: Person):
+        if person.id not in self.id_map:
+            raise ValueError(f"No person with ID {person.id} exist.")
+        self.persons.remove(person)
+        self.id_map.pop(str(person.id))
 
     def sorted_persons(self):
         return sorted(self.persons)

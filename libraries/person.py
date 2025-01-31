@@ -11,12 +11,29 @@ class Person:
         self.name: str = name
         self.surname: str = surname
         self.matricule: str = matricule
-        self.papers: PaperCollection = PaperCollection()
-        self.proposed_papers: int = 0
+        self.proposed_papers: PaperCollection = PaperCollection()
+        self.writted_papers: PaperCollection = PaperCollection()
+        self.coauthor_papers: PaperCollection = PaperCollection()
+        self.nb_writted_papers: int = 0
+        self.nb_proposed_papers: int = 0
+        self.nb_papers: int = 0
 
-    def add_paper(self, paper: Paper):
-        self.papers.add_paper(paper)
+    def add_writted_paper(self, paper: Paper):
+        self.writted_papers.add_paper(paper)
+        self.nb_writted_papers += 1
+        self.nb_papers += 1
+
+    def add_coauthor_paper(self, paper: Paper):
+        self.coauthor_papers.add_paper(paper)
+        self.nb_papers += 1
+
+    def propose_paper(self, paper: Paper):
+        self.proposed_papers.add_paper(paper)
         self.proposed_papers += 1
+
+    def unpropose_paper(self, paper: Paper):
+        self.proposed_papers.remove_paper(paper)
+        self.proposed_papers -= 1
 
     def __eq__(self, value: object, /) -> bool:
         if isinstance(value, Person):
@@ -25,12 +42,12 @@ class Person:
 
     def __le__(self, value: object, /) -> bool:
         if isinstance(value, Person):
-            return self.proposed_papers <= value.proposed_papers
+            return self.nb_proposed_papers <= value.nb_proposed_papers
         return False
 
     def __lt__(self, value: object, /) -> bool:
         if isinstance(value, Person):
-            return self.proposed_papers < value.proposed_papers
+            return self.nb_proposed_papers < value.nb_proposed_papers
         return False
 
     def __str__(self):

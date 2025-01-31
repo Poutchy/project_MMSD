@@ -28,6 +28,12 @@ class PaperCollection:
         self.papers.append(paper)
         self.id_map[str(paper.id)] = paper
 
+    def remove_paper(self, paper: Paper):
+        if paper.id not in self.id_map:
+            raise ValueError(f"No paper with ID {paper.id} exist.")
+        self.papers.remove(paper)
+        self.id_map.pop(str(paper.id))
+
     def get_by_id(self, paper_id: int):
         return self.id_map.get(str(paper_id), None)
 
