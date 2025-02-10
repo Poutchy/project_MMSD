@@ -1,16 +1,19 @@
 class Paper:
-    from person import Person
+    from libraries.person import Person
+
     def __init__(self, id: int, name: str, value: int):
         self.id: int = id
         self.name: str = name
         self.value: int = value
         self.status: int = 0
-        from person import Person
-        self.presenter: Person = None
+        self.presenter: int = 0
 
     def add_presenter(self, person: Person):
         self.status = 1
-        self.presenter = person
+        self.presenter = person.id
+
+    def is_presented(self) -> bool:
+        return bool(self.status)
 
     def __eq__(self, value: object, /) -> bool:
         if isinstance(value, Paper):

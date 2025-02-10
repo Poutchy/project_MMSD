@@ -9,24 +9,25 @@ class PaperCollection:
     def __init__(
         self,
         papers: Optional[list[Paper]] = None,
-        id_map: Optional[dict[str, Paper]] = None,
+        id_map: Optional[dict[str, int]] = None,
     ):
         self.papers: list[Paper]
         if papers:
             self.papers = papers
         else:
             self.papers = []
-        self.id_map: dict[str, Paper]
+        self.id_map: dict[str, int]
         if id_map:
             self.id_map = id_map
         else:
             self.id_map = {}
+        self.is_set = True
 
     def add_paper(self, paper: Paper):
         if paper.id in self.id_map:
             raise ValueError(f"A paper with ID {paper.id} already exist.")
         self.papers.append(paper)
-        self.id_map[str(paper.id)] = paper
+        self.is_set = False
 
     def remove_paper(self, paper: Paper):
         if paper.id not in self.id_map:
@@ -34,8 +35,20 @@ class PaperCollection:
         self.papers.remove(paper)
         self.id_map.pop(str(paper.id))
 
-    def get_by_id(self, paper_id: int):
-        return self.id_map.get(str(paper_id), None)
+    def get_by_id(self, paper_id: int) -> Paper:
+        if not self.is_set:
+            self.setup()
+        indice = self.id_map.get(str(paper_id), None)
+        if indice is None:
+            raise ValueError(f"No paper with ID {paper_id} exist.")
+        return self.papers[indice]
+
+    def setup(self) -> None:
+        self.papers = self.sorted_papers()
+
+        for i, paper in enumerate(self.papers):
+            self.id_map[str(paper.id)] = i
+        self.is_set = True
 
     def sorted_papers(self):
         return sorted(self.papers)
