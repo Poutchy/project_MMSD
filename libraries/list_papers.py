@@ -28,6 +28,7 @@ class PaperCollection:
         if paper.id in self.id_map:
             raise ValueError(f"A paper with ID {paper.id} already exist.")
         self.papers.append(paper)
+        self.id_map[str(paper.id)] = len(self.papers) - 1 
         self.is_set = False
 
     def remove_paper(self, paper: Paper):
@@ -67,6 +68,7 @@ class PaperCollection:
         return False
 
     def __getitem__(self, item):
+        print("item:", item) 
         return self.get_by_id(item)
 
     def __iadd__(self, other):

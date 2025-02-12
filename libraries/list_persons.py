@@ -13,9 +13,9 @@ class PersonCollection:
     ):
         self.persons: list[Person]
         if persons:
-            self.person = persons
+            self.persons = persons
         else:
-            self.person = []
+            self.persons = []
         self.id_map: dict[str, int]
         if id_map:
             self.id_map = id_map
@@ -27,6 +27,7 @@ class PersonCollection:
         if person.id in self.id_map:
             raise ValueError(f"A person with ID {person.id} already exist.")
         self.persons.append(person)
+        self.id_map[str(person.id)] = len(self.persons) - 1 
         self.is_set = False
 
     def get_by_id(self, person_id: int) -> Person:

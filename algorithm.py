@@ -22,26 +22,22 @@ for _, row in AffTable.iterrows():
         list_persons.add_person(new_guy)
 
 for _, row in ProdTable.iterrows():
-    print(row.keys)
-    # for k in row.keys():
-    #     print(f"{k} = {type(row[k])}")
-    # break
     new_paper: Paper = Paper(row["ID prodotto"], row["Titolo"], 1)
     if not new_paper in list_papers:
         list_papers.add_paper(new_paper)
-    list_persons[row["autore: Matricola"]].add_writted_paper(new_paper)
+    list_persons[row["autore: ID persona (IRIS)"]].add_writted_paper(new_paper)
     # writte all co author
 
 list_remove: list[Person] = []
 
-for person in list_persons.sorted_persons():
-    for paper in person.writted_papers:
-        if paper.status == 0:
-            person.propose_paper(paper)
-            break
-    if person.nb_proposed_papers != 0:
-        continue
-    list_remove.append(person)
+# for person in list_persons.sorted_persons():
+#     for paper in person.writted_papers:
+#         if paper.status == 0:
+#             person.propose_paper(paper)
+#             break
+#     if person.nb_proposed_papers != 0:
+#         continue
+#     list_remove.append(person)
 
-for person in list_remove:
-    list_persons.remove_person(person)
+# for person in list_remove:
+#     list_persons.remove_person(person)
