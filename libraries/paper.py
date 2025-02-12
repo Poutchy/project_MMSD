@@ -1,6 +1,4 @@
 class Paper:
-    from libraries.person import Person
-
     def __init__(self, id: int, name: str, value: int):
         self.id: int = id
         self.name: str = name
@@ -8,9 +6,16 @@ class Paper:
         self.status: int = 0
         self.presenter: int = 0
 
-    def add_presenter(self, person: Person):
-        self.status = 1
-        self.presenter = person.id
+    def add_presenter(self, person):
+        from libraries.person import Person
+
+        if isinstance(person, Person):
+            self.status = 1
+            self.presenter = person.id
+
+        if isinstance(person, int):
+            self.status = 1
+            self.presenter = person
 
     def is_presented(self) -> bool:
         return bool(self.status)

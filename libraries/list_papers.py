@@ -6,6 +6,7 @@ from libraries.paper import Paper
 
 
 class PaperCollection:
+
     def __init__(
         self,
         papers: Optional[list[Paper]] = None,

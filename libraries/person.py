@@ -11,6 +11,7 @@ class Person:
         self.name: str = name
         self.surname: str = surname
         self.matricule: int = matricule
+
         self.proposed_papers: PaperCollection = PaperCollection()
         self.writted_papers: PaperCollection = PaperCollection()
         self.nb_writted_papers: int = 0
@@ -48,3 +49,6 @@ class Person:
 
     def __str__(self):
         return f"{self.name} {self.surname}"
+
+
+from libraries.list_papers import PaperCollection
