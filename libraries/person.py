@@ -32,19 +32,19 @@ class Person:
         self.proposed_papers.remove_paper(paper)
         self.nb_proposed_papers -= 1
 
-    def __eq__(self, value: object, /) -> bool:
-        if isinstance(value, Person):
-            return self.id == value.id
+    def __eq__(self, ohter_person: object, /) -> bool:
+        if isinstance(ohter_person, Person):
+            return self.id == ohter_person.id
         return False
 
-    def __le__(self, value: object, /) -> bool:
-        if isinstance(value, Person):
-            return self.nb_proposed_papers <= value.nb_proposed_papers
+    def __le__(self, ohter_person: object, /) -> bool:
+        if isinstance(ohter_person, Person):
+            return self.nb_proposed_papers <= ohter_person.nb_proposed_papers
         return False
 
-    def __lt__(self, value: object, /) -> bool:
-        if isinstance(value, Person):
-            return self.nb_proposed_papers < value.nb_proposed_papers
+    def __lt__(self, ohter_person: object, /) -> bool:
+        if isinstance(ohter_person, Person):
+            return self.nb_proposed_papers < ohter_person.nb_proposed_papers
         return False
 
     def __str__(self):

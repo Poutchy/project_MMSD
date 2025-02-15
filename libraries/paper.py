@@ -20,19 +20,19 @@ class Paper:
     def is_presented(self) -> bool:
         return bool(self.status)
 
-    def __eq__(self, value: object, /) -> bool:
-        if isinstance(value, Paper):
-            return self.id == value.id
+    def __eq__(self, other_paper: object, /) -> bool:
+        if isinstance(other_paper, Paper):
+            return self.id == other_paper.id
         return False
 
-    def __le__(self, value: object, /) -> bool:
-        if isinstance(value, Paper):
-            return self.value <= value.value
+    def __le__(self, other_paper: object, /) -> bool:
+        if isinstance(other_paper, Paper):
+            return self.value <= other_paper.value
         return False
 
-    def __lt__(self, value: object, /) -> bool:
-        if isinstance(value, Paper):
-            return self.value < value.value
+    def __lt__(self, other_paper: object, /) -> bool:
+        if isinstance(other_paper, Paper):
+            return self.value < other_paper.value
         return False
 
     def __str__(self):
