@@ -28,7 +28,7 @@ class PaperCollection:
         if paper.id in self.id_map:
             raise ValueError(f"A paper with ID {paper.id} already exist.")
         self.papers.append(paper)
-        self.id_map[str(paper.id)] = len(self.papers) - 1 
+        self.id_map[str(paper.id)] = len(self.papers) - 1
         self.is_set = False
 
     def remove_paper(self, paper: Paper):
@@ -76,8 +76,9 @@ class PaperCollection:
             self.id_map.update(other.id_map)
             return self
         return NotImplemented
-    
-    def __iter__():
+
+    def __iter__(self):
+        return self.papers.__iter__()
 
     def __repr__(self):
         return f"PaperCollection({self.papers})"
