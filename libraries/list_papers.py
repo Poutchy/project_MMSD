@@ -65,6 +65,8 @@ class PaperCollection:
     def __contains__(self, item) -> bool:
         if isinstance(item, Paper):
             return item in self.papers
+        if isinstance(item, int):
+            return item in self.papers
         return False
 
     def __getitem__(self, item):

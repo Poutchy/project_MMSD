@@ -26,6 +26,8 @@ class Paper:
     def __eq__(self, other_paper: object, /) -> bool:
         if isinstance(other_paper, Paper):
             return self.id == other_paper.id
+        if isinstance(other_paper, int):
+            return self.id == other_paper
         return False
 
     def __le__(self, other_paper: object, /) -> bool:

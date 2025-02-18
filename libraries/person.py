@@ -23,6 +23,9 @@ class Person:
         self.nb_writted_papers += 1
         self.nb_papers += 1
 
+    def has_written(self, paper: Paper) -> bool:    
+        return paper in self.writted_papers
+
     def propose_paper(self, paper: Paper):
         self.proposed_papers.add_paper(paper)
         self.nb_proposed_papers += 1
