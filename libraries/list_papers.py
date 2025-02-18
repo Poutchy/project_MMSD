@@ -76,6 +76,8 @@ class PaperCollection:
             self.id_map.update(other.id_map)
             return self
         return NotImplemented
+    
+    def __iter__():
 
     def __repr__(self):
         return f"PaperCollection({self.papers})"
