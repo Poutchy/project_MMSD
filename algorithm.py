@@ -60,5 +60,7 @@ for person in list_persons.sorted_persons():
         continue
     list_remove.append(person)
 
-for person in list_remove:
-    list_persons.remove_person(person)
+for person in list_persons:
+    print(f"papers of {person}:")
+    for paper in person.writted_papers:
+        print(f"    {paper}")

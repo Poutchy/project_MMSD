@@ -74,5 +74,8 @@ class PersonCollection:
             return self
         return NotImplemented
 
+    def __iter__(self):
+        return self.persons.__iter__()
+        
     def __repr__(self):
         return f"PersonCollection({self.persons})"
