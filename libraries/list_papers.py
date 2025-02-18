@@ -68,7 +68,6 @@ class PaperCollection:
         return False
 
     def __getitem__(self, item):
-        print("item:", item) 
         return self.get_by_id(item)
 
     def __iadd__(self, other):
