@@ -1,6 +1,7 @@
 import pytest
 
-from libraries.functions_algo import first_proposition, gain_quota, initialisation
+from libraries.functions_algo import (first_proposition, gain_quota,
+                                      initialisation)
 
 
 def test_initialisation():
@@ -16,7 +17,9 @@ def test_initialisation():
 
     list_persons, nb_proposed_papers = first_proposition(list_persons)
 
-    assert nb_proposed_papers in range(nb_persons - 5, nb_persons + 1)
+    assert nb_proposed_papers in range(
+        nb_persons - 5, nb_persons + 1
+    ), "too much people don't have a first proposed paper"
 
     list_persons, list_papers, nb_proposed_papers = gain_quota(
         list_persons, list_papers, objectif, nb_proposed_papers
@@ -25,7 +28,7 @@ def test_initialisation():
     all_proposed_paper = list()
 
     for person in list_persons:
-        assert person.nb_proposed_papers < 5, "enough people have a proposed paper"
+        assert person.nb_proposed_papers < 5, "a person have too much proposed papers"
         for paper in person.proposed_papers:
             assert (
                 paper in person.writted_papers
