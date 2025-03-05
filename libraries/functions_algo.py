@@ -6,6 +6,7 @@ from libraries.list_persons import PersonCollection
 from libraries.paper import Paper, threshold
 from libraries.person import Person
 
+
 def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
     AffTable = createTableLecturers(AffFile, ConfigsFile)
     ProdTable = createTableProducts(ProdFile, ConfigsFile)
@@ -53,7 +54,9 @@ def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
                     configs,
                 ),
                 threshold(
-                    row["scopus: Percentili rivista - SJR non pesata - miglior percentile"],
+                    row[
+                        "scopus: Percentili rivista - SJR non pesata - miglior percentile"
+                    ],
                     configs,
                 ),
                 threshold(
@@ -67,14 +70,17 @@ def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
                     configs,
                 ),
                 threshold(
-                    row["scopus: Percentili rivista - SNIP pesata - miglior percentile"],
+                    row[
+                        "scopus: Percentili rivista - SNIP pesata - miglior percentile"
+                    ],
                     configs,
                 ),
                 threshold(
                     row["wos: Percentili rivista - IF - miglior percentile"], configs
                 ),
                 threshold(
-                    row["wos: Percentili rivista - 5 anni IF - miglior percentile"], configs
+                    row["wos: Percentili rivista - 5 anni IF - miglior percentile"],
+                    configs,
                 ),
             ]
 
@@ -86,6 +92,7 @@ def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
         list_persons[row["autore: ID persona (IRIS)"]].add_writted_paper(paper)
 
     return list_persons, nb_person, list_papers, objectif
+
 
 def first_proposition(list_persons: PersonCollection):
     nb_proposed_papers = 0
@@ -99,7 +106,13 @@ def first_proposition(list_persons: PersonCollection):
             continue
     return list_persons, nb_proposed_papers
 
-def gain_quota(list_persons: PersonCollection, list_papers: PaperCollection, objectif: int, nb_proposed_papers: int):
+
+def gain_quota(
+    list_persons: PersonCollection,
+    list_papers: PaperCollection,
+    objectif: int,
+    nb_proposed_papers: int,
+):
     for paper in list_papers.sorted_papers():
         if nb_proposed_papers == objectif:
             break
@@ -113,3 +126,13 @@ def gain_quota(list_persons: PersonCollection, list_papers: PaperCollection, obj
                 nb_proposed_papers += 1
                 break
     return list_persons, list_papers, nb_proposed_papers
+
+
+def to_json(list_persons: PersonCollection) -> str:
+    professors: list[dict] = []
+    for p in list_persons:
+        professors.append(p.to_json())
+    sum_values = 0
+    for p in professors:
+        sum_values += p["value"]
+    return json.dumps({"value": sum_values, "professors": professors}, indent=2)

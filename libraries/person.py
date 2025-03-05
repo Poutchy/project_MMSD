@@ -23,7 +23,7 @@ class Person:
         self.nb_writted_papers += 1
         self.nb_papers += 1
 
-    def has_written(self, paper: Paper) -> bool:    
+    def has_written(self, paper: Paper) -> bool:
         return paper in self.writted_papers
 
     def propose_paper(self, paper: Paper):
@@ -52,6 +52,21 @@ class Person:
 
     def __str__(self):
         return f"{self.name} {self.surname}"
+
+    def to_json(self) -> dict:
+        l_book: list[dict] = []
+        sum_value_paper: int = 0
+        for p in self.proposed_papers:
+            l_book.append(p.to_json())
+            sum_value_paper += p.value
+        res = {
+            "ID": self.id,
+            "nome": self.surname,
+            "cognome": self.name,
+            "products": l_book,
+            "value": sum_value_paper,
+        }
+        return res
 
 
 from libraries.list_papers import PaperCollection
