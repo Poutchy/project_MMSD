@@ -31,15 +31,17 @@ def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
 
     objectif = int(2.5 * nb_person)
 
+    begin_year = configs["begin_year"]
+    end_year = configs["end_year"]
+
     for _, row in ProdTable.iterrows():
-        if (
-            row["Anno di pubblicazione"] < configs["begin_year"]
-            or row["Anno di pubblicazione"] > configs["end_year"]
-        ):
+        published_year = row["Anno di pubblicazione"]
+        if published_year < begin_year or published_year > end_year:
             pass
 
-        if not row["ID prodotto"] in list_papers:
-
+        id_product = row["ID prodotto"]
+        if id_product not in list_papers:
+      
             val_array = [
                 threshold(
                     row[
@@ -76,7 +78,8 @@ def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
                     configs,
                 ),
                 threshold(
-                    row["wos: Percentili rivista - IF - miglior percentile"], configs
+                    row["wos: Percentili rivista - IF - miglior percentile"],
+                    configs
                 ),
                 threshold(
                     row["wos: Percentili rivista - 5 anni IF - miglior percentile"],
