@@ -51,14 +51,13 @@ class Paper:
     def to_json(self) -> dict:
         return {"ID prodotto": self.id, "Titolo": self.name, "value": self.value}
 
+def threshold(value, configs): 
+    quantile_thresholds = configs["quantile_thresholds"]
+    quantile_values = configs["quantile_values"]
 
-def threshold(value, configs):
-    for i in range(len(configs["quantile_thresholds"]) - 1):
-        if (
-            configs["quantile_thresholds"][i]
-            <= value
-            < configs["quantile_thresholds"][i + 1]
-        ):
-            return configs["quantile_values"][len(configs["quantile_values"]) - 2 - i]
+    for i in range(len(quantile_thresholds) - 1):
+        if quantile_thresholds[i] <= value < quantile_thresholds[i + 1]:
+            return quantile_values[i]  # Usa direttamente l'indice corretto
 
-    return configs["quantile_values"][-1]
+    return quantile_values[-1]
+
