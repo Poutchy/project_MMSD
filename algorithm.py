@@ -58,3 +58,10 @@ list_persons, list_papers, nb_proposed_papers = gain_quota(
 
 json = to_json(list_persons)
 print(json)
+
+totValue = 0
+for person in list_persons:
+    for paper in person.proposed_papers:
+        totValue += paper.value
+        
+print("totValue: ", totValue)
