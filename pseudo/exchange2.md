@@ -11,15 +11,21 @@ def exchange_2(list_papers: PaperCollection):
         change = False
         for paper: Paper in list_papers:
             if not paper.is_presented:
+                delta: int = 0 # no exchange will be made if delta = 0
+                old_paper: Paper = None
+                person_old_paper: Paper = None
                 for person: Person in paper.authors:
                     for other_paper: Paper in person.presented:
-                        if other_paper < paper:
-                            person.unpropose(other_paper)
-                            person.propose(paper)
-                            change = True
-                            break
-                    else:
-                        break
+                        n_delta = paper.value - other_paper.value
+                        if n_delta > delta:
+                            old_paper = other_paper
+                            delta = n_delta
+                            person_old_paper = person
+                if delta > 0:
+                    person_old_paper.unpropose(old_paper)
+                    person_old_paper.propose(paper)
+                    change = True
+                    break
         if not change:
             break
 
