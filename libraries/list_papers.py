@@ -53,7 +53,7 @@ class PaperCollection:
         self.is_set = True
 
     def sorted_papers(self):
-        return sorted(self.papers)
+        return sorted(self.papers, reverse=True)
 
     def __add__(self, other):
         if isinstance(other, PaperCollection):
