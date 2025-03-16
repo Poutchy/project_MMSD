@@ -7,7 +7,7 @@ class Paper:
     ):
         self.id: int = id
         self.name: str = name
-        self.value: int = value
+        self.value: float = value
         self.status: int = 0
         self.presenter: int = 0
 
@@ -46,14 +46,15 @@ class Paper:
         return False
 
     def __str__(self):
-        return self.name
+        return f"{self.id}, {self.name}: {self.value}"
 
     def to_json(self) -> dict:
         return {"ID prodotto": self.id, "Titolo": self.name, "value": self.value}
-    
-def threshold(value, configs): 
+
+
+def threshold(value, configs):
     for i in range(len(configs["quantile_thresholds"])):
         if value < configs["quantile_thresholds"][i]:
             return configs["quantile_values"][i]
-    
+
     return configs["quantile_values"][-1]
