@@ -1,4 +1,5 @@
-from libraries.functions_algo import (first_proposition, gain_quota,
+from libraries.functions_algo import (exchange_1, exchange_2,
+                                      first_proposition, gain_quota,
                                       initialisation, to_json)
 
 # import of all the papers and persons
@@ -56,6 +57,57 @@ list_persons, list_papers, nb_proposed_papers = gain_quota(
 # print(f"nb_proposed paper: {nb_proposed_papers}")
 # print(f"sum of values: {sum}")
 
+exchange_1(list_persons)
+
+sum = 0
+sum_prop = 0
+for person in list_persons:
+    # print(f"papers of {person}:")
+    # print("  writted paper")
+    for paper in person.writted_papers:
+        # print(f"    {paper}")
+        sum += paper.value
+    # print("  proposed paper")
+    for paper in person.proposed_papers:
+        # print(f"    {paper}")
+        sum_prop += paper.value
+
+# for person in list_remove:
+#     print(person)
+#     print("  proposed paper")
+#     for paper in person.proposed_papers:
+#         print(f"    {paper}")
+print(f"objectif: {objectif}")
+print(f"nb_proposed paper: {nb_proposed_papers}")
+print(f"sum of values: {sum}")
+print(f"sum of proposed values: {sum_prop}")
+
+
+exchange_2(list_papers, list_persons)
+
+sum = 0
+sum_prop = 0
+for person in list_persons:
+    # print(f"papers of {person}:")
+    # print("  writted paper")
+    for paper in person.writted_papers:
+        # print(f"    {paper}")
+        sum += paper.value
+    # print("  proposed paper")
+    for paper in person.proposed_papers:
+        # print(f"    {paper}")
+        sum_prop += paper.value
+
+# for person in list_remove:
+#     print(person)
+#     print("  proposed paper")
+#     for paper in person.proposed_papers:
+#         print(f"    {paper}")
+print(f"objectif: {objectif}")
+print(f"nb_proposed paper: {nb_proposed_papers}")
+print(f"sum of values: {sum}")
+print(f"sum of proposed values: {sum_prop}")
+
 json = to_json(list_persons)
 print(json)
 
@@ -63,5 +115,5 @@ totValue = 0
 for person in list_persons:
     for paper in person.proposed_papers:
         totValue += paper.value
-        
+
 print("totValue: ", totValue)
