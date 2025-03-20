@@ -1,7 +1,12 @@
 import pytest
 
-from libraries.functions_algo import (first_proposition, gain_quota,
-                                      initialisation)
+from libraries.functions_algo import (
+    exchange_1,
+    exchange_2,
+    first_proposition,
+    gain_quota,
+    initialisation,
+)
 
 
 def test_initialisation():
@@ -41,3 +46,51 @@ def test_initialisation():
     assert (
         nb_proposed_papers == objectif
     ), f"the objectif isn't obtained: {nb_proposed_papers} != {objectif}"
+
+
+def test_upgrades():
+    ConfigsFile = "data/config.json"
+    AffFile = "data/2024-02-12-DipInfoAfferenze-PO-PA-RIC-orig.xlsx"
+    ProdFile = (
+        "data/2024-02-12-prodotti-PO-PA-RIC-02A-03A-03B-04A-04B-2020-instampa.xlsx"
+    )
+
+    list_persons, nb_persons, list_papers, objectif = initialisation(
+        ConfigsFile, AffFile, ProdFile
+    )
+
+    list_persons, nb_proposed_papers = first_proposition(list_persons)
+
+    list_persons, list_papers, nb_proposed_papers = gain_quota(
+        list_persons, list_papers, objectif, nb_proposed_papers
+    )
+
+    sum_scores: float = 0.0
+
+    for person in list_persons:
+        for paper in person.proposed_papers:
+            sum_scores += paper.value
+
+    exchange_1(list_persons)
+
+    sum_first_exchange: float = 0.0
+
+    for person in list_persons:
+        for paper in person.proposed_papers:
+            sum_first_exchange += paper.value
+
+    assert (
+        sum_first_exchange == sum_scores
+    ), "The first exchange can't change the score of the selection."
+
+    exchange_2(list_papers, list_persons)
+
+    sum_second_exchange = 0.0
+
+    for person in list_persons:
+        for paper in person.proposed_papers:
+            sum_second_exchange += paper.value
+
+    assert (
+        sum_second_exchange >= sum_scores
+    ), "The second exchange can't make the score worst than before"
