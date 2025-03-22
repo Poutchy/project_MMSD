@@ -41,7 +41,7 @@ def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
 
         id_product = row["ID prodotto"]
         if id_product not in list_papers:
-      
+
             val_array = [
                 threshold(
                     row[
@@ -78,8 +78,7 @@ def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
                     configs,
                 ),
                 threshold(
-                    row["wos: Percentili rivista - IF - miglior percentile"],
-                    configs
+                    row["wos: Percentili rivista - IF - miglior percentile"], configs
                 ),
                 threshold(
                     row["wos: Percentili rivista - 5 anni IF - miglior percentile"],
@@ -139,3 +138,46 @@ def to_json(list_persons: PersonCollection) -> str:
     for p in professors:
         sum_values += p["value"]
     return json.dumps({"value": sum_values, "professors": professors}, indent=2)
+
+
+def exchange_1(list_persons: PersonCollection):
+    for person in list_persons:
+        if person.nb_proposed_papers == 0:
+            for paper in person.writted_papers:
+                if not paper.is_presented:
+                    continue
+                other_person: Person = list_persons[paper.presenter]
+                if other_person.nb_proposed_papers > 1:
+                    other_person.unpropose_paper(paper)
+                    person.propose_paper(paper)
+                    break
+            else:
+                continue
+
+
+def exchange_2(list_papers: PaperCollection, list_persons: PersonCollection):
+    change: bool
+    while True:
+        change = False
+        for paper in list_papers:
+            if not paper.is_presented():
+                delta: float = 0  # no exchange will be made if delta = 0
+                old_paper: Paper
+                person_old_paper: Person
+                l_authors = [
+                    person for person in list_persons if person.has_written(paper)
+                ]
+                for person in l_authors:
+                    for other_paper in person.proposed_papers:
+                        n_delta = paper.value - other_paper.value
+                        if n_delta > delta:
+                            old_paper = other_paper
+                            delta = n_delta
+                            person_old_paper = person
+                if delta > 0:
+                    person_old_paper.unpropose_paper(old_paper)
+                    person_old_paper.propose_paper(paper)
+                    change = True
+                    break
+        if not change:
+            break

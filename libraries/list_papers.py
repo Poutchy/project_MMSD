@@ -32,7 +32,7 @@ class PaperCollection:
         self.is_set = False
 
     def remove_paper(self, paper: Paper):
-        if paper.id not in self.id_map:
+        if str(paper.id) not in self.id_map:
             raise ValueError(f"No paper with ID {paper.id} exist.")
         self.papers.remove(paper)
         self.id_map.pop(str(paper.id))
