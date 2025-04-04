@@ -3,6 +3,7 @@ import pytest
 from libraries.functions_algo import (
     exchange_1,
     exchange_2,
+    exchange_3,
     first_proposition,
     gain_quota,
     initialisation,
@@ -92,5 +93,32 @@ def test_upgrades():
             sum_second_exchange += paper.value
 
     assert (
-        sum_second_exchange >= sum_scores
+        sum_second_exchange >= sum_first_exchange
     ), "The second exchange can't make the score worst than before"
+    
+    exchange_3(list_papers, list_persons)
+
+    sum_third_exchange = 0.0
+
+    for person in list_persons:
+        for paper in person.proposed_papers:
+            sum_third_exchange += paper.value
+
+    assert (
+        sum_third_exchange >= sum_second_exchange
+    ), "The third exchange can't make the score worst than before"
+    
+    
+
+    all_proposed_paper = list()
+
+    for person in list_persons:
+        assert person.nb_proposed_papers < 5, "a person have too much proposed papers"
+        for paper in person.proposed_papers:
+            assert (
+                paper in person.writted_papers
+            ), f"{paper} is proposed but not written by {person}"
+            assert (
+                paper not in all_proposed_paper
+            ), f"{paper} is proposed multiple times"
+            all_proposed_paper.append(paper)
