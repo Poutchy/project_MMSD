@@ -1,6 +1,6 @@
 """General example of the use of the program"""
 
-from libraries.functions_algo import (exchange_1, exchange_2,
+from libraries.functions_algo import (exchange_1, exchange_2, exchange_3,
                                       first_proposition, gain_quota,
                                       initialisation, to_json)
 
@@ -24,12 +24,19 @@ def do_all(
     exchange_1(list_persons)
 
     exchange_2(list_papers, list_persons)
+    
+    exchange_3(list_papers, list_persons)
 
     json = to_json(list_persons)
 
     with open("log.json", "w", encoding="utf-8") as f:
         f.write(json)
 
+    totValue = 0
+    for person in list_persons:
+        for paper in person.proposed_papers:
+            totValue += paper.value
+    print("totvalue", totValue)
 
 if __name__ == "__main__":
     do_all()
