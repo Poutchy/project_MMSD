@@ -148,22 +148,22 @@ def to_json(list_persons: PersonCollection) -> str:
     return json.dumps({"value": sum_values, "professors": professors}, indent=2)
 
 
-def exchange_1(list_persons: PersonCollection):
-    for person in list_persons:
-        if person.nb_proposed_papers == 0:
-            for paper in person.writted_papers:
-                if not paper.is_presented:
-                    continue
-                other_person: Person = list_persons[paper.presenter]
-                if other_person.nb_proposed_papers > 1:
-                    other_person.unpropose_paper(paper)
-                    person.propose_paper(paper)
-                    break
-            else:
-                continue
+# def exchange_1(list_persons: PersonCollection):
+#     for person in list_persons:
+#         if person.nb_proposed_papers == 0:
+#             for paper in person.writted_papers:
+#                 if not paper.is_presented:
+#                     continue
+#                 other_person: Person = list_persons[paper.presenter]
+#                 if other_person.nb_proposed_papers > 1:
+#                     other_person.unpropose_paper(paper)
+#                     person.propose_paper(paper)
+#                     break
+#             else:
+#                 continue
 
 
-def exchange_2(list_papers: PaperCollection, list_persons: PersonCollection):
+def exchange_1(list_papers: PaperCollection, list_persons: PersonCollection):
     change: bool
     while True:
         change = False
@@ -191,7 +191,7 @@ def exchange_2(list_papers: PaperCollection, list_persons: PersonCollection):
             break
 
 
-def exchange_3(list_papers: PaperCollection, list_persons: PersonCollection):
+def exchange_2(list_persons: PersonCollection):
     for person in list_persons:
         if person.nb_proposed_papers == 0 or person.nb_proposed_papers == 4:
             continue

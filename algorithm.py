@@ -23,7 +23,7 @@ def do_all(
         list_persons, list_papers, objectif, nb_proposed_papers
     )
 
-    exchange_types = ["1", "2", "3"]
+    exchange_types = ["1", "2"] # , "3"]
 
     parser = argparse.ArgumentParser()
 
@@ -43,8 +43,8 @@ def do_all(
             exchange_1(list_persons)
         elif ex == "2":
             exchange_2(list_papers, list_persons)
-        elif ex == "3":
-            exchange_3(list_papers, list_persons)
+        # elif ex == "3":
+        #     exchange_3(list_papers, list_persons)
 
     json = to_json(list_persons)
 
