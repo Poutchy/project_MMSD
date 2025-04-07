@@ -20,6 +20,7 @@ class Person:
 
     def add_writted_paper(self, paper: Paper):
         self.writted_papers.add_paper(paper)
+        self.writted_papers.setup()
         self.nb_writted_papers += 1
         self.nb_papers += 1
 
@@ -35,19 +36,22 @@ class Person:
         self.proposed_papers.remove_paper(paper)
         self.nb_proposed_papers -= 1
 
-    def __eq__(self, ohter_person: object, /) -> bool:
-        if isinstance(ohter_person, Person):
-            return self.id == ohter_person.id
+    def __eq__(self, other_person: object, /) -> bool:
+        if isinstance(other_person, Person):
+            return self.id == other_person.id
         return False
 
-    def __le__(self, ohter_person: object, /) -> bool:
-        if isinstance(ohter_person, Person):
-            return self.nb_proposed_papers <= ohter_person.nb_proposed_papers
+    def __le__(self, other_person: object, /) -> bool:
+        if isinstance(other_person, Person):
+            return (
+                self.nb_writted_papers - self.nb_proposed_papers
+                <= other_person.nb_writted_papers - other_person.nb_proposed_papers
+            )
         return False
 
-    def __lt__(self, ohter_person: object, /) -> bool:
-        if isinstance(ohter_person, Person):
-            return self.nb_proposed_papers < ohter_person.nb_proposed_papers
+    def __lt__(self, other_person: object, /) -> bool:
+        if isinstance(other_person, Person):
+            return self.nb_proposed_papers < other_person.nb_proposed_papers
         return False
 
     def __str__(self):
