@@ -2,7 +2,7 @@
 
 import argparse
 
-from libraries.functions_algo import (exchange_1, exchange_2, exchange_3,
+from libraries.functions_algo import (exchange_1, exchange_2, #exchange_3,
                                       first_proposition, gain_quota,
                                       initialisation, to_json)
 
@@ -40,9 +40,9 @@ def do_all(
     print("Selected exchanges:", selected_exchanges)
     for ex in selected_exchanges:
         if ex == "1":
-            exchange_1(list_persons)
-        elif ex == "2":
             exchange_2(list_papers, list_persons)
+        elif ex == "2":
+            exchange_2(list_persons)
         # elif ex == "3":
         #     exchange_3(list_papers, list_persons)
 
