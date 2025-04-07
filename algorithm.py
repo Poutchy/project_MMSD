@@ -40,7 +40,7 @@ def do_all(
     print("Selected exchanges:", selected_exchanges)
     for ex in selected_exchanges:
         if ex == "1":
-            exchange_2(list_papers, list_persons)
+            exchange_1(list_papers, list_persons)
         elif ex == "2":
             exchange_2(list_persons)
         # elif ex == "3":
