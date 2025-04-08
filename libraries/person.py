@@ -43,10 +43,15 @@ class Person:
 
     def __le__(self, other_person: object, /) -> bool:
         if isinstance(other_person, Person):
-            return (
-                self.nb_writted_papers - self.nb_proposed_papers
-                <= other_person.nb_writted_papers - other_person.nb_proposed_papers
-            )
+            sum = 0
+            sum_other = 0
+            for p in self.writted_papers:
+                if p.is_presented():
+                    sum += 1
+            for p in other_person.writted_papers:
+                if p.is_presented():
+                    sum_other += 1
+            return self.nb_writted_papers - sum <= other_person.nb_writted_papers - sum
         return False
 
     def __lt__(self, other_person: object, /) -> bool:
