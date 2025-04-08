@@ -195,14 +195,16 @@ def exchange_2(list_persons: PersonCollection):
     for person in list_persons:
         if person.nb_proposed_papers == 0 or person.nb_proposed_papers == 4:
             continue
+        
         for paper in person.writted_papers:
             if paper.is_presented() or paper.value == 0.0:
                 continue
+            
             delta: float = 0
             other_person: Person
             old_paper: Paper
             for person2 in list_persons:
-                if person2.nb_proposed_papers <= 1:
+                if person2.nb_proposed_papers <= 1 or person2 is person:
                     continue
                 for other_paper in person2.proposed_papers:
                     n_delta = paper.value - other_paper.value
