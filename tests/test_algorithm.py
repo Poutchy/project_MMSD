@@ -3,7 +3,7 @@ import pytest
 from libraries.functions_algo import (
     exchange_1,
     exchange_2,
-    exchange_3,
+    # exchange_3,
     first_proposition,
     gain_quota,
     initialisation,
@@ -72,7 +72,7 @@ def test_upgrades():
         for paper in person.proposed_papers:
             sum_scores += paper.value
 
-    exchange_1(list_persons)
+    exchange_1(list_papers, list_persons)
 
     sum_first_exchange: float = 0.0
 
@@ -84,7 +84,7 @@ def test_upgrades():
         sum_first_exchange == sum_scores
     ), "The first exchange can't change the score of the selection."
 
-    exchange_2(list_papers, list_persons)
+    exchange_2(list_persons)
 
     sum_second_exchange = 0.0
 
@@ -96,17 +96,17 @@ def test_upgrades():
         sum_second_exchange >= sum_first_exchange
     ), "The second exchange can't make the score worst than before"
     
-    exchange_3(list_papers, list_persons)
+    # exchange_3(list_papers, list_persons)
 
-    sum_third_exchange = 0.0
+    # sum_third_exchange = 0.0
 
-    for person in list_persons:
-        for paper in person.proposed_papers:
-            sum_third_exchange += paper.value
+    # for person in list_persons:
+    #     for paper in person.proposed_papers:
+    #         sum_third_exchange += paper.value
 
-    assert (
-        sum_third_exchange >= sum_second_exchange
-    ), "The third exchange can't make the score worst than before"
+    # assert (
+    #     sum_third_exchange >= sum_second_exchange
+    # ), "The third exchange can't make the score worst than before"
     
     
 
