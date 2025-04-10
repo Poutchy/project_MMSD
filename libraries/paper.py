@@ -3,12 +3,14 @@ class Paper:
         self,
         id: int,
         name: str,
+        type: str,
         value: float,
     ):
         self.id: int = id
         self.name: str = name
         self.value: float = value
         self.status: int = 0
+        self.type: str = type
         self.presenter: int = 0
 
         # scopus: Percentili pubblicazione - miglior percentile
@@ -49,7 +51,12 @@ class Paper:
         return f"{self.id}, {self.name}: {self.value}"
 
     def to_json(self) -> dict:
-        return {"ID prodotto": self.id, "Titolo": self.name, "value": self.value}
+        return {
+            "ID prodotto": self.id,
+            "Titolo": self.name,
+            "type": self.type,
+            "value": self.value,
+        }
 
 
 def threshold(value, configs):

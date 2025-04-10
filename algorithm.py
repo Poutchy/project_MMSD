@@ -15,10 +15,10 @@ from libraries.functions_algo import (
 
 
 # import of all the papers and persons
-def do_all(
+def main(
     configs_file="data/config.json",
     aff_file="data/2024-02-12-DipInfoAfferenze-PO-PA-RIC-orig.xlsx",
-    prod_file="data/2024-02-12-prodotti-PO-PA-RIC-02A-03A-03B-04A-04B-2020-instampa.xlsx",
+    prod_file="data/2024-07-05-prodotti-PO-PA-RIC-02A-03A-03B-04A-04B-2020-instampa.xlsx",
 ):
     list_persons, _, list_papers, objectif = initialisation(
         configs_file, aff_file, prod_file
@@ -90,4 +90,4 @@ def do_all(
 
 
 if __name__ == "__main__":
-    do_all()
+    main()

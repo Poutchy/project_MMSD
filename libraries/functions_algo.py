@@ -37,12 +37,17 @@ def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
 
     for _, row in ProdTable.iterrows():
         published_year = row["Anno di pubblicazione"]
+        paper_type = row["Tipologia (collezione)"]
         if published_year < begin_year or published_year > end_year:
             pass
 
         id_product = row["ID prodotto"]
         if id_product not in list_papers:
-
+            # var_fields = configs["check_field"]
+            # array_val = []
+            # for t in var_fields:
+            #     array_val.append(threshold(row[t], configs))
+            # paper_value = max(array_val)
             val_array = [
                 threshold(
                     row[
@@ -50,46 +55,51 @@ def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
                     ],
                     configs,
                 ),
-                threshold(
-                    row[
-                        "scopus: Percentili rivista - CITESCORE pesata - miglior percentile"
-                    ],
-                    configs,
-                ),
-                threshold(
-                    row[
-                        "scopus: Percentili rivista - SJR non pesata - miglior percentile"
-                    ],
-                    configs,
-                ),
-                threshold(
-                    row["scopus: Percentili rivista - SJR pesata - miglior percentile"],
-                    configs,
-                ),
-                threshold(
-                    row[
-                        "scopus: Percentili rivista - SNIP non pesata - miglior percentile"
-                    ],
-                    configs,
-                ),
-                threshold(
-                    row[
-                        "scopus: Percentili rivista - SNIP pesata - miglior percentile"
-                    ],
-                    configs,
-                ),
+                # threshold(
+                #     row[
+                #         "scopus: Percentili rivista - CITESCORE pesata - miglior percentile"
+                #     ],
+                #     configs,
+                # ),
+                # threshold(
+                #     row[
+                #         "scopus: Percentili rivista - SJR non pesata - miglior percentile"
+                #     ],
+                #     configs,
+                # ),
+                # threshold(
+                #     row["scopus: Percentili rivista - SJR pesata - miglior percentile"],
+                #     configs,
+                # ),
+                # threshold(
+                #     row[
+                #         "scopus: Percentili rivista - SNIP non pesata - miglior percentile"
+                #     ],
+                #     configs,
+                # ),
+                # threshold(
+                #     row[
+                #         "scopus: Percentili rivista - SNIP pesata - miglior percentile"
+                #     ],
+                #     configs,
+                # ),
                 threshold(
                     row["wos: Percentili rivista - IF - miglior percentile"], configs
                 ),
-                threshold(
-                    row["wos: Percentili rivista - 5 anni IF - miglior percentile"],
-                    configs,
-                ),
+                # threshold(
+                #     row["wos: Percentili rivista - 5 anni IF - miglior percentile"],
+                #     configs,
+                # ),
             ]
 
             paper_value = max(val_array)
 
-            new_paper: Paper = Paper(row["ID prodotto"], row["Titolo"], paper_value)
+            new_paper: Paper = Paper(
+                row["ID prodotto"],
+                row["Titolo"],
+                row["Tipologia (collezione)"],
+                paper_value,
+            )
             list_papers.add_paper(new_paper)
         paper = list_papers[row["ID prodotto"]]
         list_persons[row["autore: ID persona (IRIS)"]].add_writted_paper(paper)
@@ -132,7 +142,7 @@ def gain_quota(
     objectif: int,
     nb_proposed_papers: int,
 ):
-    for paper in list_papers.sorted_papers():
+    for paper in list(reversed(list_papers.sorted_papers())):
         if nb_proposed_papers == objectif:
             break
         if paper.is_presented():
