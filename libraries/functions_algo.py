@@ -118,6 +118,14 @@ def first_proposition(list_persons: PersonCollection):
         list_persons.setup()
 
 
+def recompute_objectif(objectif: int, list_persons):
+    remove = 0
+    for person in list_persons:
+        if not person.nb_proposed_papers:
+            remove += 1
+    return objectif - remove
+
+
 def gain_quota(
     list_persons: PersonCollection,
     list_papers: PaperCollection,
@@ -205,7 +213,7 @@ def exchange_2(list_persons: PersonCollection):
             other_person: Optional[Person] = None
             old_paper: Optional[Paper] = None
             for person2 in list_persons:
-                if person2.nb_proposed_papers <= 1 and person2 is person:
+                if person2.nb_proposed_papers <= 1 or person2 is person:
                     continue
                 for other_paper in person2.proposed_papers:
                     n_delta = paper.value - other_paper.value

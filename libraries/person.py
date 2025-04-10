@@ -80,6 +80,7 @@ class Person:
             "ID": self.id,
             "nome": self.surname,
             "cognome": self.name,
+            "nb_writted_papers": self.nb_writted_papers,
             "products": l_book,
             "value": sum_value_paper,
         }
