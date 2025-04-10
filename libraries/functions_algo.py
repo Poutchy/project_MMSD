@@ -1,4 +1,5 @@
 import json
+from typing import List, Optional
 
 from libraries.importExcel import createTableLecturers, createTableProducts
 from libraries.list_papers import PaperCollection
@@ -98,15 +99,31 @@ def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
 
 def first_proposition(list_persons: PersonCollection):
     nb_proposed_papers = 0
-    for person in list_persons.sorted_persons():
-        for paper in person.writted_papers:
-            if paper.status == 0:
-                person.propose_paper(paper)
-                nb_proposed_papers += 1
+    restart = False
+    while True:
+        for person in list(reversed(list_persons.sorted_persons())):
+            if person.nb_proposed_papers != 0:
+                continue
+            for paper in person.writted_papers:
+                if paper.status == 0:
+                    person.propose_paper(paper)
+                    nb_proposed_papers += 1
+                    restart = True
+                    break
+            if restart:
+                restart = False
                 break
-        if person.nb_proposed_papers != 0:
-            continue
-    return list_persons, nb_proposed_papers
+        else:
+            return list_persons, nb_proposed_papers
+        list_persons.setup()
+
+
+def recompute_objectif(objectif: int, list_persons):
+    remove = 0
+    for person in list_persons:
+        if not person.nb_proposed_papers:
+            remove += 1
+    return objectif - remove
 
 
 def gain_quota(
@@ -140,30 +157,30 @@ def to_json(list_persons: PersonCollection) -> str:
     return json.dumps({"value": sum_values, "professors": professors}, indent=2)
 
 
-def exchange_1(list_persons: PersonCollection):
-    for person in list_persons:
-        if person.nb_proposed_papers == 0:
-            for paper in person.writted_papers:
-                if not paper.is_presented:
-                    continue
-                other_person: Person = list_persons[paper.presenter]
-                if other_person.nb_proposed_papers > 1:
-                    other_person.unpropose_paper(paper)
-                    person.propose_paper(paper)
-                    break
-            else:
-                continue
+# def exchange_1(list_persons: PersonCollection):
+#     for person in list_persons:
+#         if person.nb_proposed_papers == 0:
+#             for paper in person.writted_papers:
+#                 if not paper.is_presented:
+#                     continue
+#                 other_person: Person = list_persons[paper.presenter]
+#                 if other_person.nb_proposed_papers > 1:
+#                     other_person.unpropose_paper(paper)
+#                     person.propose_paper(paper)
+#                     break
+#             else:
+#                 continue
 
 
-def exchange_2(list_papers: PaperCollection, list_persons: PersonCollection):
+def exchange_1(list_papers: PaperCollection, list_persons: PersonCollection):
     change: bool
     while True:
         change = False
         for paper in list_papers:
             if not paper.is_presented():
                 delta: float = 0  # no exchange will be made if delta = 0
-                old_paper: Paper
-                person_old_paper: Person
+                old_paper: Optional[Paper] = None
+                person_old_paper: Optional[Person] = None
                 l_authors = [
                     person for person in list_persons if person.has_written(paper)
                 ]
@@ -174,7 +191,7 @@ def exchange_2(list_papers: PaperCollection, list_persons: PersonCollection):
                             old_paper = other_paper
                             delta = n_delta
                             person_old_paper = person
-                if delta > 0:
+                if old_paper is not None and person_old_paper is not None:
                     person_old_paper.unpropose_paper(old_paper)
                     person_old_paper.propose_paper(paper)
                     change = True
@@ -182,40 +199,79 @@ def exchange_2(list_papers: PaperCollection, list_persons: PersonCollection):
         if not change:
             break
 
-def exchange_3(list_papers:PaperCollection, list_persons: PersonCollection):
+
+def exchange_2(list_persons: PersonCollection):
     for person in list_persons:
         if person.nb_proposed_papers == 0 or person.nb_proposed_papers == 4:
             continue
+
         for paper in person.writted_papers:
             if paper.is_presented() or paper.value == 0.0:
                 continue
-            delta: float = 0  
-            other_person: Person
-            old_paper: Paper
+
+            delta: float = 0
+            other_person: Optional[Person] = None
+            old_paper: Optional[Paper] = None
             for person2 in list_persons:
-                if person2.nb_proposed_papers <= 1:
+                if person2.nb_proposed_papers <= 1 or person2 is person:
                     continue
                 for other_paper in person2.proposed_papers:
                     n_delta = paper.value - other_paper.value
-                    if n_delta > delta:  
+                    if n_delta > delta:
                         other_person = person2
                         old_paper = other_paper
                         delta = n_delta
-            if delta > 0:
+            if other_person is not None and old_paper is not None:
                 other_person.unpropose_paper(old_paper)
                 person.propose_paper(paper)
                 break
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+def exchange_3(list_papers: PaperCollection, list_persons: PersonCollection):
+    """ """
+    for paper in list_papers:
+        if not paper.is_presented():
+            _ = try_alternate(list_papers, list_persons, paper)
+
+
+def try_alternate(
+    list_papers: PaperCollection,
+    list_persons: PersonCollection,
+    paper: Paper,
+    first_writter: Optional[Person] = None,
+    l: Optional[List[Paper]] = None,
+) -> bool:
+    if paper.id == "":
+        print(paper)
+    new_l: List[Paper] = [paper]
+    if l is not None:
+        new_l.extend(l.copy())
+    list_writter: List[Person] = [
+        person for person in list_persons if paper in person.writted_papers
+    ]
+    for writter in list_writter:
+        for w_paper in writter.proposed_papers:
+            if w_paper.value >= paper.value or w_paper in new_l:
+                continue
+            if try_alternate(list_papers, list_persons, w_paper, writter, new_l):
+                if first_writter is not None:
+                    first_writter.unpropose_paper(paper)
+                writter.propose_paper(paper)
+                return True
+    delta: float = 0
+    old_writter: Optional[Person] = None
+    old_paper: Optional[Paper] = None
+    for writter in list_writter:
+        for other_paper in writter.proposed_papers:
+            n_delta = paper.value - other_paper.value
+            if n_delta > delta:
+                old_writter = writter
+                old_paper = other_paper
+                delta = n_delta
+    if old_paper is not None and old_writter is not None:
+        old_writter.unpropose_paper(old_paper)
+        if first_writter is not None:
+            first_writter.unpropose_paper(paper)
+        old_writter.propose_paper(paper)
+        return True
+    return False

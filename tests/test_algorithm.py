@@ -1,3 +1,5 @@
+from typing import List
+
 import pytest
 
 from libraries.functions_algo import (
@@ -8,6 +10,7 @@ from libraries.functions_algo import (
     gain_quota,
     initialisation,
 )
+from libraries.paper import Paper
 
 
 def test_initialisation():
@@ -31,7 +34,7 @@ def test_initialisation():
         list_persons, list_papers, objectif, nb_proposed_papers
     )
 
-    all_proposed_paper = list()
+    all_proposed_paper: List[Paper] = list()
 
     for person in list_persons:
         assert person.nb_proposed_papers < 5, "a person have too much proposed papers"
@@ -72,7 +75,7 @@ def test_upgrades():
         for paper in person.proposed_papers:
             sum_scores += paper.value
 
-    exchange_1(list_persons)
+    exchange_1(list_papers, list_persons)
 
     sum_first_exchange: float = 0.0
 
@@ -84,7 +87,20 @@ def test_upgrades():
         sum_first_exchange == sum_scores
     ), "The first exchange can't change the score of the selection."
 
-    exchange_2(list_papers, list_persons)
+    all_proposed_paper: List[Paper] = list()
+
+    for person in list_persons:
+        assert person.nb_proposed_papers < 5, "a person have too much proposed papers"
+        for paper in person.proposed_papers:
+            assert (
+                paper in person.writted_papers
+            ), f"{paper} is proposed but not written by {person}"
+            assert (
+                paper not in all_proposed_paper
+            ), f"{paper} is proposed multiple times"
+            all_proposed_paper.append(paper)
+
+    exchange_2(list_persons)
 
     sum_second_exchange = 0.0
 
@@ -95,20 +111,6 @@ def test_upgrades():
     assert (
         sum_second_exchange >= sum_first_exchange
     ), "The second exchange can't make the score worst than before"
-    
-    exchange_3(list_papers, list_persons)
-
-    sum_third_exchange = 0.0
-
-    for person in list_persons:
-        for paper in person.proposed_papers:
-            sum_third_exchange += paper.value
-
-    assert (
-        sum_third_exchange >= sum_second_exchange
-    ), "The third exchange can't make the score worst than before"
-    
-    
 
     all_proposed_paper = list()
 
@@ -122,3 +124,32 @@ def test_upgrades():
                 paper not in all_proposed_paper
             ), f"{paper} is proposed multiple times"
             all_proposed_paper.append(paper)
+
+    exchange_3(list_papers, list_persons)
+
+    sum_third_exchange = 0.0
+
+    for person in list_persons:
+        for paper in person.proposed_papers:
+            sum_third_exchange += paper.value
+
+    assert (
+        sum_third_exchange >= sum_second_exchange
+    ), "The third exchange can't make the score worst than before"
+
+    all_proposed_paper = list()
+
+    for person in list_persons:
+        assert person.nb_proposed_papers < 5, "a person have too much proposed papers"
+        for paper in person.proposed_papers:
+            assert (
+                paper in person.writted_papers
+            ), f"{paper} is proposed but not written by {person}"
+            assert (
+                paper not in all_proposed_paper
+            ), f"{paper} is proposed multiple times"
+            all_proposed_paper.append(paper)
+
+    assert (
+        nb_proposed_papers == objectif
+    ), f"the objectif isn't obtained: {nb_proposed_papers} != {objectif}"
