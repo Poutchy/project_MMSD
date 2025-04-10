@@ -9,6 +9,7 @@ from libraries.functions_algo import (
     first_proposition,
     gain_quota,
     initialisation,
+    recompute_objectif,
     to_json,
 )
 
@@ -25,9 +26,23 @@ def do_all(
 
     list_persons, nb_proposed_papers = first_proposition(list_persons)
 
+    objectif = recompute_objectif(objectif, list_persons)
+
+    json_before = to_json(list_persons)
+
+    with open("log_before.json", "w", encoding="utf-8") as f:
+        f.write(json_before)
+
     list_persons, list_papers, nb_proposed_papers = gain_quota(
         list_persons, list_papers, objectif, nb_proposed_papers
     )
+
+    print(f"{objectif}")
+
+    json_between = to_json(list_persons)
+
+    with open("log_between.json", "w", encoding="utf-8") as f:
+        f.write(json_between)
 
     exchange_types = ["1", "2", "3"]
 
@@ -47,8 +62,18 @@ def do_all(
     for ex in selected_exchanges:
         if ex == "1":
             exchange_1(list_papers, list_persons)
+            json_after_1 = to_json(list_persons)
+
+            with open("log_after_1.json", "w", encoding="utf-8") as f:
+                f.write(json_after_1)
+
         elif ex == "2":
             exchange_2(list_persons)
+            json_after_2 = to_json(list_persons)
+
+            with open("log_after_2.json", "w", encoding="utf-8") as f:
+                f.write(json_after_2)
+
         elif ex == "3":
             exchange_3(list_papers, list_persons)
 
