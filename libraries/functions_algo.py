@@ -36,68 +36,74 @@ def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
     end_year = configs["end_year"]
 
     paramToOptimize = configs["parameter_to_optimize"]
-    
-    for _, row in ProdTable.iterrows():        
+    authorized_types = [t.upper() for t in configs["product_type"]]
+
+    for _, row in ProdTable.iterrows():
         published_year = row["Anno di pubblicazione"]
         paper_type = row["Tipologia (collezione)"]
-        if published_year < begin_year or published_year > end_year:
-            pass
-        
+        if (
+            published_year < begin_year
+            or published_year > end_year
+            or not paper_type.startswith(tuple(authorized_types))
+        ):
+            continue
+
         id_product = row["ID prodotto"]
         if id_product not in list_papers:
-            val_array = []
-            for param in paramToOptimize:
-                # as of now we consider every parameter, will fix
-                # if(param == "wos: Percentili rivista - IF - miglior percentile" or 
-                #    param == "scopus: Percentili  rivista - CITESCORE non pesata - miglior percentile"):
-                val_array.append(
-                    threshold(row[param], configs),
-                )
-                
-            # val_array = [
-            #     threshold(
-            #         row[
-            #             "scopus: Percentili  rivista - CITESCORE non pesata - miglior percentile"
-            #         ],
-            #         configs,
-            #     ),
-            #     # threshold(
-            #     #     row[
-            #     #         "scopus: Percentili rivista - CITESCORE pesata - miglior percentile"
-            #     #     ],
-            #     #     configs,
-            #     # ),
-            #     # threshold(
-            #     #     row[
-            #     #         "scopus: Percentili rivista - SJR non pesata - miglior percentile"
-            #     #     ],
-            #     #     configs,
-            #     # ),
-            #     # threshold(
-            #     #     row["scopus: Percentili rivista - SJR pesata - miglior percentile"],
-            #     #     configs,
-            #     # ),
-            #     # threshold(
-            #     #     row[
-            #     #         "scopus: Percentili rivista - SNIP non pesata - miglior percentile"
-            #     #     ],
-            #     #     configs,
-            #     # ),
-            #     # threshold(
-            #     #     row[
-            #     #         "scopus: Percentili rivista - SNIP pesata - miglior percentile"
-            #     #     ],
-            #     #     configs,
-            #     # ),
-            #     threshold(
-            #         row["wos: Percentili rivista - IF - miglior percentile"], configs
-            #     ),
-            #     # threshold(
-            #     #     row["wos: Percentili rivista - 5 anni IF - miglior percentile"],
-            #     #     configs,
-            #     # ),
-            # ]
-                        
+            # if "selection" in parser.key():
+            #     mask = parser["selection"]
+            #     val_array = [
+            #         val if (i not in mask and not isnan(val)) else 0
+            #         for i, val in enumerate(configs["product_type"])
+            #     ]:with expression as target:
+            # else:
+            #     val_array = [val for val in configs["product_type"] if not isnan(val)]
+
+            # paper_value = max(val_array)
+            val_array = [
+                threshold(
+                    row[
+                        "scopus: Percentili  rivista - CITESCORE non pesata - miglior percentile"
+                    ],
+                    configs,
+                ),
+                #     # threshold(
+                #     #     row[
+                #     #         "scopus: Percentili rivista - CITESCORE pesata - miglior percentile"
+                #     #     ],
+                #     #     configs,
+                #     # ),
+                #     # threshold(
+                #     #     row[
+                #     #         "scopus: Percentili rivista - SJR non pesata - miglior percentile"
+                #     #     ],
+                #     #     configs,
+                #     # ),
+                #     # threshold(
+                #     #     row["scopus: Percentili rivista - SJR pesata - miglior percentile"],
+                #     #     configs,
+                #     # ),
+                #     # threshold(
+                #     #     row[
+                #     #         "scopus: Percentili rivista - SNIP non pesata - miglior percentile"
+                #     #     ],
+                #     #     configs,
+                #     # ),
+                #     # threshold(
+                #     #     row[
+                #     #         "scopus: Percentili rivista - SNIP pesata - miglior percentile"
+                #     #     ],
+                #     #     configs,
+                #     # ),
+                threshold(
+                    row["wos: Percentili rivista - IF - miglior percentile"], configs
+                ),
+                #     # threshold(
+                #     #     row["wos: Percentili rivista - 5 anni IF - miglior percentile"],
+                #     #     configs,
+                #     # ),
+            ]
+
             paper_value = max(val_array)
 
             new_paper: Paper = Paper(
@@ -163,14 +169,21 @@ def gain_quota(
     return list_persons, list_papers, nb_proposed_papers
 
 
-def to_json(list_persons: PersonCollection) -> str:
+def to_json(list_persons: PersonCollection, nb_proposed_papers: int) -> str:
     professors: list[dict] = []
     for p in list_persons:
         professors.append(p.to_json())
     sum_values = 0
     for p in professors:
         sum_values += p["value"]
-    return json.dumps({"value": sum_values, "professors": professors}, indent=2)
+    return json.dumps(
+        {
+            "value": sum_values,
+            "proposed_papers": nb_proposed_papers,
+            "professors": professors,
+        },
+        indent=2,
+    )
 
 
 # def exchange_1(list_persons: PersonCollection):

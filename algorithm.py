@@ -28,7 +28,7 @@ def main(
 
     objectif = recompute_objectif(objectif, list_persons)
 
-    json_before = to_json(list_persons)
+    json_before = to_json(list_persons, nb_proposed_papers)
 
     with open("log_before.json", "w", encoding="utf-8") as f:
         f.write(json_before)
@@ -39,7 +39,7 @@ def main(
 
     print(f"{objectif}")
 
-    json_between = to_json(list_persons)
+    json_between = to_json(list_persons, nb_proposed_papers)
 
     with open("log_between.json", "w", encoding="utf-8") as f:
         f.write(json_between)
@@ -62,14 +62,14 @@ def main(
     for ex in selected_exchanges:
         if ex == "1":
             exchange_1(list_papers, list_persons)
-            json_after_1 = to_json(list_persons)
+            json_after_1 = to_json(list_persons, nb_proposed_papers)
 
             with open("log_after_1.json", "w", encoding="utf-8") as f:
                 f.write(json_after_1)
 
         elif ex == "2":
             exchange_2(list_persons)
-            json_after_2 = to_json(list_persons)
+            json_after_2 = to_json(list_persons, nb_proposed_papers)
 
             with open("log_after_2.json", "w", encoding="utf-8") as f:
                 f.write(json_after_2)
@@ -77,7 +77,7 @@ def main(
         elif ex == "3":
             exchange_3(list_papers, list_persons)
 
-    json = to_json(list_persons)
+    json = to_json(list_persons, nb_proposed_papers)
 
     with open("log.json", "w", encoding="utf-8") as f:
         f.write(json)
