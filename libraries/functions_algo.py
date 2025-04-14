@@ -8,7 +8,7 @@ from libraries.paper import Paper, threshold
 from libraries.person import Person
 
 
-def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
+def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str, selected_parameters: list[str]):
     AffTable = createTableLecturers(AffFile, ConfigsFile)
     ProdTable = createTableProducts(ProdFile, ConfigsFile)
 
@@ -35,7 +35,6 @@ def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
     begin_year = configs["begin_year"]
     end_year = configs["end_year"]
 
-    paramToOptimize = configs["parameter_to_optimize"]
     authorized_types = [t.upper() for t in configs["product_type"]]
 
     for _, row in ProdTable.iterrows():
@@ -50,6 +49,12 @@ def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
 
         id_product = row["ID prodotto"]
         if id_product not in list_papers:
+            
+            val_array = []
+            for param in selected_parameters:
+                val_array.append(
+                    threshold(row[param], configs),
+                )
             # if "selection" in parser.key():
             #     mask = parser["selection"]
             #     val_array = [
@@ -60,49 +65,49 @@ def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
             #     val_array = [val for val in configs["product_type"] if not isnan(val)]
 
             # paper_value = max(val_array)
-            val_array = [
-                threshold(
-                    row[
-                        "scopus: Percentili  rivista - CITESCORE non pesata - miglior percentile"
-                    ],
-                    configs,
-                ),
-                #     # threshold(
-                #     #     row[
-                #     #         "scopus: Percentili rivista - CITESCORE pesata - miglior percentile"
-                #     #     ],
-                #     #     configs,
-                #     # ),
-                #     # threshold(
-                #     #     row[
-                #     #         "scopus: Percentili rivista - SJR non pesata - miglior percentile"
-                #     #     ],
-                #     #     configs,
-                #     # ),
-                #     # threshold(
-                #     #     row["scopus: Percentili rivista - SJR pesata - miglior percentile"],
-                #     #     configs,
-                #     # ),
-                #     # threshold(
-                #     #     row[
-                #     #         "scopus: Percentili rivista - SNIP non pesata - miglior percentile"
-                #     #     ],
-                #     #     configs,
-                #     # ),
-                #     # threshold(
-                #     #     row[
-                #     #         "scopus: Percentili rivista - SNIP pesata - miglior percentile"
-                #     #     ],
-                #     #     configs,
-                #     # ),
-                threshold(
-                    row["wos: Percentili rivista - IF - miglior percentile"], configs
-                ),
-                #     # threshold(
-                #     #     row["wos: Percentili rivista - 5 anni IF - miglior percentile"],
-                #     #     configs,
-                #     # ),
-            ]
+            # val_array = [
+            #     threshold(
+            #         row[
+            #             "scopus: Percentili  rivista - CITESCORE non pesata - miglior percentile"
+            #         ],
+            #         configs,
+            #     ),
+            #     # threshold(
+            #     #     row[
+            #     #         "scopus: Percentili rivista - CITESCORE pesata - miglior percentile"
+            #     #     ],
+            #     #     configs,
+            #     # ),
+            #     # threshold(
+            #     #     row[
+            #     #         "scopus: Percentili rivista - SJR non pesata - miglior percentile"
+            #     #     ],
+            #     #     configs,
+            #     # ),
+            #     # threshold(
+            #     #     row["scopus: Percentili rivista - SJR pesata - miglior percentile"],
+            #     #     configs,
+            #     # ),
+            #     # threshold(
+            #     #     row[
+            #     #         "scopus: Percentili rivista - SNIP non pesata - miglior percentile"
+            #     #     ],
+            #     #     configs,
+            #     # ),
+            #     # threshold(
+            #     #     row[
+            #     #         "scopus: Percentili rivista - SNIP pesata - miglior percentile"
+            #     #     ],
+            #     #     configs,
+            #     # ),
+            #     threshold(
+            #         row["wos: Percentili rivista - IF - miglior percentile"], configs
+            #     ),
+            #     # threshold(
+            #     #     row["wos: Percentili rivista - 5 anni IF - miglior percentile"],
+            #     #     configs,
+            #     # ),
+            # ]
 
             paper_value = max(val_array)
 
