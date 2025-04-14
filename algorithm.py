@@ -13,6 +13,17 @@ from libraries.functions_algo import (
     to_json,
 )
 
+def parse_args(exchange_types):
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--exchange",
+        nargs="+",
+        choices=exchange_types,
+        help="choice of the different exchanges and their order",
+    )
+
+    return parser.parse_args()
 
 # import of all the papers and persons
 def main(
@@ -45,18 +56,9 @@ def main(
         f.write(json_between)
 
     exchange_types = ["1", "2", "3"]
-
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument(
-        "--exchange",
-        nargs="+",
-        choices=exchange_types,
-        help="choice of the different exchanges and their order",
-    )
-
-    args = parser.parse_args()
-
+    
+    args = parse_args(exchange_types)
+    
     selected_exchanges = args.exchange if args.exchange else exchange_types
     print("Selected exchanges:", selected_exchanges)
     for ex in selected_exchanges:
@@ -81,13 +83,6 @@ def main(
 
     with open("log.json", "w", encoding="utf-8") as f:
         f.write(json)
-
-    totValue = 0
-    for person in list_persons:
-        for paper in person.proposed_papers:
-            totValue += paper.value
-    print("totvalue", totValue)
-
 
 if __name__ == "__main__":
     main()
