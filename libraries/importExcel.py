@@ -32,7 +32,7 @@ def createTableLecturers(fileName, configFile=""):
     fieldsLecturer = configs["professor"]
 
     try:
-        fileLecturer = os.path.join(curr_dir, fileName)
+        fileLecturer = os.path.join(curr_dir, fileName[0])
         dataLecturer = pd.read_excel(fileLecturer, usecols=fieldsLecturer)
     except _ERR:
         print("[ERROR] Provide a valid PROFESSORS file!!!")
@@ -52,7 +52,7 @@ def createTableProducts(fileName, configFile=""):
     fieldsProduct = configs["product"]
 
     try:
-        fileProduct = os.path.join(curr_dir, fileName)
+        fileProduct = os.path.join(curr_dir, fileName[0])
         dataProduct = pd.read_excel(fileProduct, usecols=fieldsProduct)
     except _ERR:
         print("[ERROR] Provide a valid PRODUCTS file!!!")

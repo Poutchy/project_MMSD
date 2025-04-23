@@ -19,6 +19,15 @@ def parse_args(exchange_types, parameter_to_optimize):
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 
     parser.add_argument(
+        "--persons", nargs="+", help="Choice of the file name of the researcher"
+    )
+
+    parser.add_argument(
+        "--products", nargs="+", help="Choice of the files names for the products"
+    )
+
+    parser.add_argument(
+        "-e",
         "--exchange",
         nargs="+",
         choices=exchange_types,
@@ -30,6 +39,7 @@ def parse_args(exchange_types, parameter_to_optimize):
         param_help += f"  [{i}] {param}\n"
 
     parser.add_argument(
+        "-p",
         "--params",
         nargs="+",
         type=int,
@@ -58,10 +68,17 @@ def main(
         else param_to_optimize
     )
 
+    if args.persons != None:
+        aff_file = args.persons
+    if args.products != None:
+        prod_file = args.products
+
     print("Selected exchanges:", selected_exchanges)
     print("Selected parameters:")
     for param in selected_parameters:
         print(f"  - {param}")
+    print(f"Selected people list: {aff_file}")
+    print(f"Selected products lists: {prod_file}")
 
     list_persons, _, list_papers, objectif = initialisation(
         configs_file, aff_file, prod_file, selected_parameters
