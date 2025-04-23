@@ -19,7 +19,10 @@ ProdTable = createTableProducts(ProdFile, Configs)
 # print("next")
 for i, row in ProdTable.iterrows():
     print("Product")
-    print(f"contributors: Autori/curatori attualmente afferenti (Nr) = {row["contributors: Autori/curatori attualmente afferenti (Nr)"]}")
+    print(
+        f"contributors: Autori/curatori attualmente afferenti (Nr) = {row["contributors: Autori/curatori attualmente afferenti (Nr)"]}"
+    )
     print(f"Nr autori/Curatori (numero) = {row["Nr autori/Curatori (numero)"]}")
 
-    if i == 15: break
+    if i == 15:
+        break

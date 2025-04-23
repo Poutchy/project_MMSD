@@ -27,7 +27,7 @@ class PersonCollection:
         if person.id in self.id_map:
             raise ValueError(f"A person with ID {person.id} already exist.")
         self.persons.append(person)
-        self.id_map[str(person.id)] = len(self.persons) - 1 
+        self.id_map[str(person.id)] = len(self.persons) - 1
         self.is_set = False
 
     def get_by_id(self, person_id: int) -> Person:
@@ -76,6 +76,6 @@ class PersonCollection:
 
     def __iter__(self):
         return self.persons.__iter__()
-        
+
     def __repr__(self):
         return f"PersonCollection({self.persons})"

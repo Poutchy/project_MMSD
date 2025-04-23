@@ -8,7 +8,9 @@ from libraries.paper import Paper, threshold
 from libraries.person import Person
 
 
-def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
+def initialisation(
+    ConfigsFile: str, AffFile: str, ProdFile: str, selected_parameters: list[str]
+):
     AffTable = createTableLecturers(AffFile, ConfigsFile)
     ProdTable = createTableProducts(ProdFile, ConfigsFile)
 
@@ -35,61 +37,23 @@ def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str):
     begin_year = configs["begin_year"]
     end_year = configs["end_year"]
 
+    authorized_types = [t.upper() for t in configs["product_type"]]
+
     for _, row in ProdTable.iterrows():
         published_year = row["Anno di pubblicazione"]
         paper_type = row["Tipologia (collezione)"]
-        if published_year < begin_year or published_year > end_year:
-            pass
+        if (
+            published_year < begin_year
+            or published_year > end_year
+            or not paper_type.startswith(tuple(authorized_types))
+        ):
+            continue
 
         id_product = row["ID prodotto"]
         if id_product not in list_papers:
-            # var_fields = configs["check_field"]
-            # array_val = []
-            # for t in var_fields:
-            #     array_val.append(threshold(row[t], configs))
-            # paper_value = max(array_val)
+
             val_array = [
-                threshold(
-                    row[
-                        "scopus: Percentili  rivista - CITESCORE non pesata - miglior percentile"
-                    ],
-                    configs,
-                ),
-                # threshold(
-                #     row[
-                #         "scopus: Percentili rivista - CITESCORE pesata - miglior percentile"
-                #     ],
-                #     configs,
-                # ),
-                # threshold(
-                #     row[
-                #         "scopus: Percentili rivista - SJR non pesata - miglior percentile"
-                #     ],
-                #     configs,
-                # ),
-                # threshold(
-                #     row["scopus: Percentili rivista - SJR pesata - miglior percentile"],
-                #     configs,
-                # ),
-                # threshold(
-                #     row[
-                #         "scopus: Percentili rivista - SNIP non pesata - miglior percentile"
-                #     ],
-                #     configs,
-                # ),
-                # threshold(
-                #     row[
-                #         "scopus: Percentili rivista - SNIP pesata - miglior percentile"
-                #     ],
-                #     configs,
-                # ),
-                threshold(
-                    row["wos: Percentili rivista - IF - miglior percentile"], configs
-                ),
-                # threshold(
-                #     row["wos: Percentili rivista - 5 anni IF - miglior percentile"],
-                #     configs,
-                # ),
+                threshold(row[param], configs) for param in selected_parameters
             ]
 
             paper_value = max(val_array)
@@ -157,29 +121,21 @@ def gain_quota(
     return list_persons, list_papers, nb_proposed_papers
 
 
-def to_json(list_persons: PersonCollection) -> str:
+def to_json(list_persons: PersonCollection, nb_proposed_papers: int) -> str:
     professors: list[dict] = []
     for p in list_persons:
         professors.append(p.to_json())
     sum_values = 0
     for p in professors:
         sum_values += p["value"]
-    return json.dumps({"value": sum_values, "professors": professors}, indent=2)
-
-
-# def exchange_1(list_persons: PersonCollection):
-#     for person in list_persons:
-#         if person.nb_proposed_papers == 0:
-#             for paper in person.writted_papers:
-#                 if not paper.is_presented:
-#                     continue
-#                 other_person: Person = list_persons[paper.presenter]
-#                 if other_person.nb_proposed_papers > 1:
-#                     other_person.unpropose_paper(paper)
-#                     person.propose_paper(paper)
-#                     break
-#             else:
-#                 continue
+    return json.dumps(
+        {
+            "value": sum_values,
+            "proposed_papers": nb_proposed_papers,
+            "professors": professors,
+        },
+        indent=2,
+    )
 
 
 def exchange_1(list_papers: PaperCollection, list_persons: PersonCollection):

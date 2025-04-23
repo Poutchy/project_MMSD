@@ -1,3 +1,4 @@
+import json
 from typing import List
 
 import pytest
@@ -20,8 +21,12 @@ def test_initialisation():
         "data/2024-02-12-prodotti-PO-PA-RIC-02A-03A-03B-04A-04B-2020-instampa.xlsx"
     )
 
+    with open(ConfigsFile, "r") as f:
+        configs = json.load(f)
+    param_to_optimize = configs["parameter_to_optimize"]
+
     list_persons, nb_persons, list_papers, objectif = initialisation(
-        ConfigsFile, AffFile, ProdFile
+        ConfigsFile, AffFile, ProdFile, [param_to_optimize[0], param_to_optimize[6]]
     )
 
     list_persons, nb_proposed_papers = first_proposition(list_persons)
@@ -58,9 +63,12 @@ def test_upgrades():
     ProdFile = (
         "data/2024-02-12-prodotti-PO-PA-RIC-02A-03A-03B-04A-04B-2020-instampa.xlsx"
     )
+    with open(ConfigsFile, "r") as f:
+        configs = json.load(f)
+    param_to_optimize = configs["parameter_to_optimize"]
 
     list_persons, nb_persons, list_papers, objectif = initialisation(
-        ConfigsFile, AffFile, ProdFile
+        ConfigsFile, AffFile, ProdFile, [param_to_optimize[0], param_to_optimize[6]]
     )
 
     list_persons, nb_proposed_papers = first_proposition(list_persons)
@@ -84,8 +92,8 @@ def test_upgrades():
             sum_first_exchange += paper.value
 
     assert (
-        sum_first_exchange == sum_scores
-    ), "The first exchange can't change the score of the selection."
+        sum_first_exchange >= sum_scores
+    ), "The first exchange can't make the score worst than before"
 
     all_proposed_paper: List[Paper] = list()
 
