@@ -8,7 +8,9 @@ from libraries.paper import Paper, threshold
 from libraries.person import Person
 
 
-def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str, selected_parameters: list[str]):
+def initialisation(
+    ConfigsFile: str, AffFile: str, ProdFile: str, selected_parameters: list[str]
+):
     AffTable = createTableLecturers(AffFile, ConfigsFile)
     ProdTable = createTableProducts(ProdFile, ConfigsFile)
 
@@ -49,65 +51,10 @@ def initialisation(ConfigsFile: str, AffFile: str, ProdFile: str, selected_param
 
         id_product = row["ID prodotto"]
         if id_product not in list_papers:
-            
-            val_array = []
-            for param in selected_parameters:
-                val_array.append(
-                    threshold(row[param], configs),
-                )
-            # if "selection" in parser.key():
-            #     mask = parser["selection"]
-            #     val_array = [
-            #         val if (i not in mask and not isnan(val)) else 0
-            #         for i, val in enumerate(configs["product_type"])
-            #     ]:with expression as target:
-            # else:
-            #     val_array = [val for val in configs["product_type"] if not isnan(val)]
 
-            # paper_value = max(val_array)
-            # val_array = [
-            #     threshold(
-            #         row[
-            #             "scopus: Percentili  rivista - CITESCORE non pesata - miglior percentile"
-            #         ],
-            #         configs,
-            #     ),
-            #     # threshold(
-            #     #     row[
-            #     #         "scopus: Percentili rivista - CITESCORE pesata - miglior percentile"
-            #     #     ],
-            #     #     configs,
-            #     # ),
-            #     # threshold(
-            #     #     row[
-            #     #         "scopus: Percentili rivista - SJR non pesata - miglior percentile"
-            #     #     ],
-            #     #     configs,
-            #     # ),
-            #     # threshold(
-            #     #     row["scopus: Percentili rivista - SJR pesata - miglior percentile"],
-            #     #     configs,
-            #     # ),
-            #     # threshold(
-            #     #     row[
-            #     #         "scopus: Percentili rivista - SNIP non pesata - miglior percentile"
-            #     #     ],
-            #     #     configs,
-            #     # ),
-            #     # threshold(
-            #     #     row[
-            #     #         "scopus: Percentili rivista - SNIP pesata - miglior percentile"
-            #     #     ],
-            #     #     configs,
-            #     # ),
-            #     threshold(
-            #         row["wos: Percentili rivista - IF - miglior percentile"], configs
-            #     ),
-            #     # threshold(
-            #     #     row["wos: Percentili rivista - 5 anni IF - miglior percentile"],
-            #     #     configs,
-            #     # ),
-            # ]
+            val_array = [
+                threshold(row[param], configs) for param in selected_parameters
+            ]
 
             paper_value = max(val_array)
 
@@ -189,21 +136,6 @@ def to_json(list_persons: PersonCollection, nb_proposed_papers: int) -> str:
         },
         indent=2,
     )
-
-
-# def exchange_1(list_persons: PersonCollection):
-#     for person in list_persons:
-#         if person.nb_proposed_papers == 0:
-#             for paper in person.writted_papers:
-#                 if not paper.is_presented:
-#                     continue
-#                 other_person: Person = list_persons[paper.presenter]
-#                 if other_person.nb_proposed_papers > 1:
-#                     other_person.unpropose_paper(paper)
-#                     person.propose_paper(paper)
-#                     break
-#             else:
-#                 continue
 
 
 def exchange_1(list_papers: PaperCollection, list_persons: PersonCollection):

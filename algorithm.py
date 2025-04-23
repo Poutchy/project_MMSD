@@ -14,6 +14,7 @@ from libraries.functions_algo import (
     to_json,
 )
 
+
 def parse_args(exchange_types, parameter_to_optimize):
     parser = argparse.ArgumentParser(formatter_class=argparse.RawTextHelpFormatter)
 
@@ -22,8 +23,8 @@ def parse_args(exchange_types, parameter_to_optimize):
         nargs="+",
         choices=exchange_types,
         help="choice of the different exchanges and their order",
-    )    
-    
+    )
+
     param_help = "Indices of parameters to optimize. Available options:\n"
     for i, param in enumerate(parameter_to_optimize):
         param_help += f"  [{i}] {param}\n"
@@ -37,6 +38,7 @@ def parse_args(exchange_types, parameter_to_optimize):
 
     return parser.parse_args()
 
+
 # import of all the papers and persons
 def main(
     configs_file="data/config.json",
@@ -47,16 +49,20 @@ def main(
         configs = json.load(f)
     param_to_optimize = configs["parameter_to_optimize"]
     exchange_types = ["1", "2", "3"]
-    
-    args = parse_args(exchange_types, param_to_optimize)    
+
+    args = parse_args(exchange_types, param_to_optimize)
     selected_exchanges = args.exchange if args.exchange else exchange_types
-    selected_parameters = [param_to_optimize[i] for i in args.params] if args.params else param_to_optimize
-    
+    selected_parameters = (
+        [param_to_optimize[i] for i in args.params]
+        if args.params
+        else param_to_optimize
+    )
+
     print("Selected exchanges:", selected_exchanges)
     print("Selected parameters:")
     for param in selected_parameters:
         print(f"  - {param}")
-    
+
     list_persons, _, list_papers, objectif = initialisation(
         configs_file, aff_file, prod_file, selected_parameters
     )
@@ -100,6 +106,7 @@ def main(
 
     with open("log.json", "w", encoding="utf-8") as f:
         f.write(to_json(list_persons, nb_proposed_papers))
+
 
 if __name__ == "__main__":
     main()
