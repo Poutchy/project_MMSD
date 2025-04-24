@@ -69,9 +69,9 @@ def main(
     )
 
     if args.persons != None:
-        aff_file = args.persons
+        aff_file = args.persons[0]
     if args.products != None:
-        prod_file = args.products
+        prod_file = args.products[0]
 
     print("Selected exchanges:", selected_exchanges)
     print("Selected parameters:")
@@ -95,8 +95,6 @@ def main(
     list_persons, list_papers, nb_proposed_papers = gain_quota(
         list_persons, list_papers, objectif, nb_proposed_papers
     )
-
-    # print(f"{objectif}")
 
     json_between = to_json(list_persons, nb_proposed_papers)
 

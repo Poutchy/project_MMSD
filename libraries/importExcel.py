@@ -8,6 +8,7 @@ Created on Sun Dec 29 14:15:25 2024
 
 import json
 import os
+import warnings
 
 import pandas as pd
 
@@ -20,6 +21,7 @@ dataLecturer = None
 fileProduct = None
 dataProduct = None
 
+warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl.styles.stylesheet")
 
 def createTableLecturers(fileName, configFile=""):
     try:
@@ -32,7 +34,7 @@ def createTableLecturers(fileName, configFile=""):
     fieldsLecturer = configs["professor"]
 
     try:
-        fileLecturer = os.path.join(curr_dir, fileName[0])
+        fileLecturer = os.path.join(curr_dir, fileName)
         dataLecturer = pd.read_excel(fileLecturer, usecols=fieldsLecturer)
     except _ERR:
         print("[ERROR] Provide a valid PROFESSORS file!!!")
@@ -52,7 +54,7 @@ def createTableProducts(fileName, configFile=""):
     fieldsProduct = configs["product"]
 
     try:
-        fileProduct = os.path.join(curr_dir, fileName[0])
+        fileProduct = os.path.join(curr_dir, fileName)
         dataProduct = pd.read_excel(fileProduct, usecols=fieldsProduct)
     except _ERR:
         print("[ERROR] Provide a valid PRODUCTS file!!!")
