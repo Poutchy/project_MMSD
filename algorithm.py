@@ -96,7 +96,7 @@ def main(
         list_persons, list_papers, objectif, nb_proposed_papers
     )
 
-    print(f"{objectif}")
+    # print(f"{objectif}")
 
     json_between = to_json(list_persons, nb_proposed_papers)
 
@@ -120,6 +120,10 @@ def main(
 
         elif ex == "3":
             exchange_3(list_papers, list_persons)
+            json_after_3 = to_json(list_persons, nb_proposed_papers)
+
+            with open("log_after_3.json", "w", encoding="utf-8") as f:
+                f.write(json_after_3)
 
     with open("log.json", "w", encoding="utf-8") as f:
         f.write(to_json(list_persons, nb_proposed_papers))
