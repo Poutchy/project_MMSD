@@ -106,7 +106,7 @@ def gain_quota(
     objectif: int,
     nb_proposed_papers: int,
 ):
-    for paper in list(reversed(list_papers.sorted_papers())):
+    for paper in list_papers.sorted_papers():
         if nb_proposed_papers == objectif:
             break
         if paper.is_presented():
