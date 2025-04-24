@@ -1,6 +1,7 @@
 import json
 from typing import List, Optional
 
+from libraries.decorators import timer
 from libraries.importExcel import createTableLecturers, createTableProducts
 from libraries.list_papers import PaperCollection
 from libraries.list_persons import PersonCollection
@@ -8,6 +9,7 @@ from libraries.paper import Paper, threshold
 from libraries.person import Person
 
 
+@timer
 def initialisation(
     ConfigsFile: str, AffFile: str, ProdFile: str, selected_parameters: list[str]
 ):
