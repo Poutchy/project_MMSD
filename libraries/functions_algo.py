@@ -101,7 +101,7 @@ def recompute_objectif(objectif: int, list_persons):
             remove += 1
     return objectif - remove
 
-
+@timer
 def gain_quota(
     list_persons: PersonCollection,
     list_papers: PaperCollection,
@@ -139,7 +139,7 @@ def to_json(list_persons: PersonCollection, nb_proposed_papers: int) -> str:
         indent=2,
     )
 
-
+@timer
 def exchange_1(list_papers: PaperCollection, list_persons: PersonCollection):
     change: bool
     while True:
@@ -167,7 +167,7 @@ def exchange_1(list_papers: PaperCollection, list_persons: PersonCollection):
         if not change:
             break
 
-
+@timer
 def exchange_2(list_persons: PersonCollection):
     for person in list_persons:
         if person.nb_proposed_papers == 0 or person.nb_proposed_papers == 4:
@@ -194,7 +194,7 @@ def exchange_2(list_persons: PersonCollection):
                 person.propose_paper(paper)
                 break
 
-
+@timer
 def exchange_3(list_papers: PaperCollection, list_persons: PersonCollection):
     """ """
     for paper in list_papers:
