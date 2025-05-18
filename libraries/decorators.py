@@ -3,6 +3,19 @@ from typing import Any, Callable
 
 
 def timer(func: Callable) -> Callable:
+    """
+    Decorator that measures and prints the execution time of a function.
+
+    Parameters
+    ----------
+    func : Callable
+        The function to be wrapped and timed.
+
+    Returns
+    -------
+    Callable
+        A wrapped version of `func` that prints how long it took to execute.
+    """
 
     def wrapper(*args, **kwargs) -> Any:
         start_time: float = time.perf_counter()

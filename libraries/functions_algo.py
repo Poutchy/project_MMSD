@@ -1,3 +1,35 @@
+"""
+Paper Assignment and Optimization
+
+This module implements the logic for initializing and optimizing the assignment of
+academic papers to affiliated lecturers based on predefined constraints and scoring
+criteria. It uses heuristics and iterative exchanges to meet an objective distribution
+of proposed papers.
+
+Key Concepts
+------------
+- Initialization: Load and filter persons and papers based on configuration and input data.
+- Proposal Phase: Select papers for persons based on authorship and paper value.
+- Optimization: Iteratively exchange papers between persons to maximize overall value
+  while respecting per-person constraints.
+
+Dependencies
+------------
+- pandas (for AffTable and ProdTable dataframes)
+- json (for reading config)
+- Custom libraries: `libraries.decorators`, `libraries.importExcel`, `libraries.list_papers`,
+  `libraries.list_persons`, `libraries.paper`, `libraries.person`
+
+Main Functions
+--------------
+- initialisation
+- first_proposition
+- gain_quota
+- exchange_1, exchange_2, exchange_3
+- try_alternate
+- to_json
+"""
+
 import json
 from typing import List, Optional
 
@@ -13,6 +45,29 @@ from libraries.person import Person
 def initialisation(
     ConfigsFile: str, AffFile: str, ProdFile: str, selected_parameters: list[str]
 ):
+    """
+    Initializes the list of persons and papers from provided files, filtering papers based on
+    configuration rules and computing an assignment objective.
+
+    Parameters
+    ----------
+    ConfigsFile : str
+        Path to the configuration JSON file.
+    AffFile : str
+        Path to the affiliation Excel file.
+    ProdFile : str
+        Path to the product (publication) Excel file.
+    selected_parameters : list[str]
+        List of parameter names to evaluate each paper's score.
+
+    Returns
+    -------
+    tuple[PersonCollection, int, PaperCollection, int]
+        - Collection of persons
+        - Number of unique persons
+        - Collection of papers
+        - Objective number of proposed papers
+    """
     AffTable = createTableLecturers(AffFile, ConfigsFile)
     ProdTable = createTableProducts(ProdFile, ConfigsFile)
 
@@ -74,6 +129,19 @@ def initialisation(
 
 
 def first_proposition(list_persons: PersonCollection):
+    """
+    Proposes one paper per person who hasn't proposed any yet,
+    prioritizing highest-value unpublished papers.
+
+    Parameters
+    ----------
+    list_persons : PersonCollection
+
+    Returns
+    -------
+    tuple[PersonCollection, int]
+        Updated person list and number of proposed papers
+    """
     nb_proposed_papers = 0
     restart = False
     while True:
@@ -95,11 +163,26 @@ def first_proposition(list_persons: PersonCollection):
 
 
 def recompute_objectif(objectif: int, list_persons):
+    """
+    Adjusts the objective based on persons who proposed no papers.
+
+    Parameters
+    ----------
+    objectif : int
+        Initial objective
+    list_persons : PersonCollection
+
+    Returns
+    -------
+    int
+        Adjusted objective
+    """
     remove = 0
     for person in list_persons:
         if not person.nb_proposed_papers:
             remove += 1
     return objectif - remove
+
 
 @timer
 def gain_quota(
@@ -108,6 +191,22 @@ def gain_quota(
     objectif: int,
     nb_proposed_papers: int,
 ):
+    """
+    Attempts to reach the target number of proposed papers by assigning
+    unproposed high-value papers to authors with less than 4 proposed.
+
+    Parameters
+    ----------
+    list_persons : PersonCollection
+    list_papers : PaperCollection
+    objectif : int
+    nb_proposed_papers : int
+
+    Returns
+    -------
+    tuple[PersonCollection, PaperCollection, int]
+        Updated collections and number of proposed papers
+    """
     for paper in list_papers.sorted_papers():
         if nb_proposed_papers == objectif:
             break
@@ -124,6 +223,19 @@ def gain_quota(
 
 
 def to_json(list_persons: PersonCollection, nb_proposed_papers: int) -> str:
+    """
+    Serializes the current state of proposed papers and their authors into JSON.
+
+    Parameters
+    ----------
+    list_persons : PersonCollection
+    nb_proposed_papers : int
+
+    Returns
+    -------
+    str
+        JSON string of the export
+    """
     professors: list[dict] = []
     for p in list_persons:
         professors.append(p.to_json())
@@ -139,8 +251,18 @@ def to_json(list_persons: PersonCollection, nb_proposed_papers: int) -> str:
         indent=2,
     )
 
+
 @timer
 def exchange_1(list_papers: PaperCollection, list_persons: PersonCollection):
+    """
+    First optimization pass: Tries to replace lower-value proposed papers with
+    higher-value unproposed papers written by the same person.
+
+    Parameters
+    ----------
+    list_papers : PaperCollection
+    list_persons : PersonCollection
+    """
     change: bool
     while True:
         change = False
@@ -167,8 +289,17 @@ def exchange_1(list_papers: PaperCollection, list_persons: PersonCollection):
         if not change:
             break
 
+
 @timer
 def exchange_2(list_persons: PersonCollection):
+    """
+    Second optimization pass: Trades papers between different authors to improve
+    value distribution, avoiding under/over-assignment.
+
+    Parameters
+    ----------
+    list_persons : PersonCollection
+    """
     for person in list_persons:
         if person.nb_proposed_papers == 0 or person.nb_proposed_papers == 4:
             continue
@@ -194,9 +325,18 @@ def exchange_2(list_persons: PersonCollection):
                 person.propose_paper(paper)
                 break
 
+
 @timer
 def exchange_3(list_papers: PaperCollection, list_persons: PersonCollection):
-    """ """
+    """
+    Third optimization pass: Tries recursive paper swapping chains to allow high-value
+    papers to replace lower-value ones indirectly.
+
+    Parameters
+    ----------
+    list_papers : PaperCollection
+    list_persons : PersonCollection
+    """
     for paper in list_papers:
         if not paper.is_presented():
             _ = try_alternate(list_papers, list_persons, paper)
@@ -209,6 +349,26 @@ def try_alternate(
     first_writter: Optional[Person] = None,
     l: Optional[List[Paper]] = None,
 ) -> bool:
+    """
+    Recursively attempts to make room for a higher-value paper by exploring
+    indirect substitution chains across authors' proposed lists.
+
+    Parameters
+    ----------
+    list_papers : PaperCollection
+    list_persons : PersonCollection
+    paper : Paper
+        The unproposed paper we are trying to introduce
+    first_writter : Optional[Person], default=None
+        The original person proposing the paper
+    l : Optional[List[Paper]], default=None
+        Chain of papers involved in the recursive swap
+
+    Returns
+    -------
+    bool
+        True if an alternate configuration was found and applied
+    """
     if paper.id == "":
         print(paper)
     new_l: List[Paper] = [paper]
