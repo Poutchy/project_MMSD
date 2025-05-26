@@ -1,2 +1,9 @@
 # project_MMSD
-Repo for the MMSD Project
+
+## What is the project?
+
+## What do we have implemented?
+
+### Types
+### Functions
+### Algorithms

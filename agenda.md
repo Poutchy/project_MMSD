@@ -1,10 +1,14 @@
-1. Parameters choices
+1. Products types choice
 
 
 
-2. Return of the functions in form of json
+2. Parameters choices
 
 
 
-3. Uses of the different excel files for data
+3. Return of the functions in form of json
+
+
+
+4. Uses of the different excel files for data
 
