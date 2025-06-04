@@ -16,7 +16,7 @@ def exchange_1(list_papers: PaperCollection):
                 old_paper: Paper = None
                 person_old_paper: Paper = None
                 for person: Person in paper.authors:
-                    for other_paper: Paper in person.presented:
+                    for other_paper: Paper in person.proposed_papers:
                         n_delta = paper.value - other_paper.value
                         if n_delta > delta:
                             old_paper = other_paper

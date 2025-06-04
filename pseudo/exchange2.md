@@ -1,4 +1,4 @@
-= Explication of the third exchange type
+= Explication of the second exchange type
 
 In the second exchange we would like ?.
 
@@ -6,13 +6,14 @@ In the second exchange we would like ?.
 
 ```python
 
-def exchange_3(list_persons: PersonCollection, list_papers: PaperCollection):
+def exchange_2(list_persons: PersonCollection):
     for person in list_persons with nb_presented_paper < limit:
         non_presented_papers = [person.writted.presented - person.presented]
         for paper in non_presented_papers:
             other_person = paper.presenter
-            if other_person.nb_presented_paper == limit:
-                other_person.unpropose(paper)
+            paper_other_person = min(other_person.presented_paper)
+            if other_person.nb_presented_paper >= 2 and paper > other_paper:
+                other_person.unpropose(other_paper)
                 person.propose(paper)
                 continue
 
