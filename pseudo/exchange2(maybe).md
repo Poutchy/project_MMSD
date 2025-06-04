@@ -7,23 +7,14 @@ In the second exchange we would like ?.
 ```python
 
 def exchange_3(list_persons: PersonCollection, list_papers: PaperCollection):
-
     for person in list_persons with nb_presented_paper < limit:
-
         non_presented_papers = [person.writted.presented - person.presented]
-
         for paper in non_presented_papers:
-
             other_person = paper.presenter
-
             if other_person.nb_presented_paper == limit:
-
                 other_person.unpropose(paper)
-
                 person.propose(paper)
-
                 continue
-
 
 ```
 
