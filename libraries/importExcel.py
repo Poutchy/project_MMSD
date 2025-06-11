@@ -21,7 +21,10 @@ dataLecturer = None
 fileProduct = None
 dataProduct = None
 
-warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl.styles.stylesheet")
+warnings.filterwarnings(
+    "ignore", category=UserWarning, module="openpyxl.styles.stylesheet"
+)
+
 
 def createTableLecturers(fileName, configFile=""):
     try:
