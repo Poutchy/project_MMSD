@@ -1,6 +1,7 @@
-= Explication of the second exchange type
+= Explication of the first exchange type
 
-In the second exchange we would like to make sure that every people only take the bests papers they can presents.
+In the first exchange we would like to make sure that every people only take the bests papers they can presents. It tries to replace low value papers proposed by an author with higher value papers they have written but not yet proposed.
+
 
 == pseudo code:
 

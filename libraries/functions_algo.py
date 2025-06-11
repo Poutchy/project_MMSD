@@ -369,8 +369,6 @@ def try_alternate(
     bool
         True if an alternate configuration was found and applied
     """
-    if paper.id == "":
-        print(paper)
     new_l: List[Paper] = [paper]
     if l is not None:
         new_l.extend(l.copy())

@@ -1,6 +1,6 @@
 = Explication of the second exchange type
 
-In the second exchange we would like ?.
+In the second exchange we would like to improve the solution by performing direct swaps between authors. We take a better paper from one author and replace a worse one in another author’s proposed list.
 
 == pseudo code:
 
@@ -9,13 +9,26 @@ In the second exchange we would like ?.
 def exchange_2(list_persons: PersonCollection):
     for person in list_persons with nb_presented_paper < limit:
         non_presented_papers = [person.writted.presented - person.presented]
+        
         for paper in non_presented_papers:
+            delta: int = 0 
             other_person = paper.presenter
             paper_other_person = min(other_person.presented_paper)
-            if other_person.nb_presented_paper >= 2 and paper > other_paper:
-                other_person.unpropose(other_paper)
-                person.propose(paper)
-                continue
+            
+            for person2 in list_person:
+                if person2.nb_presented_paper <= 1 or person2 is person:
+                    continue
+                for other_paper in person2.proposed_papers:
+                    n_delta = paper.value - other_paper.value
+                    if n_delta > delta:
+                        other_person = person2
+                        old_paper = other_paper
+                        delta = n_delta
+
+            if other_person is not None and old_paper is not None:
+                other_person.unpropose_paper(old_paper)
+                person.propose_paper(paper)
+                break
 
 ```
 
